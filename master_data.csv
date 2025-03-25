@@ -1,0 +1,18 @@
+Department,Activity,Benchmark,Planned Load,Head Count
+Inward,Unloading / Loading Boxes,150,45,40
+Inward,Receipt Process in WMS (Boxes),150,45,40
+Inward,Qty. GRN & QC,1100,45,40
+Inventory,Qty- Good Putaway,1500,45,40
+Inventory,Qty- Cycle Count/Consolidation,2000,45,40
+Inventory,STN-Direct Putaway,1500,45,40
+Outward,Qty. picked-B2C,400,45,40
+Outward,QTY(Invoiced+Packed)B2C,450,45,40
+Outward,QTY.Manifest+Handover-B2C,1500,45,40
+Outward,Picked QTY. ( B2B ),600,45,40
+Outward,QTY(Invoiced+Packed)B2B,800,45,40
+Return,RTO Received QTY. (B2B/B2C),1000,45,40
+Return,RTO Good processing return,200,45,40
+Return,Bad processing with claim,60,45,40
+Return,RTO Putaway,1200,45,40
+Return,Qty. GP Creation QCR,1000,45,40
+Other Activities,,0,45,40

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DWM Closing Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+        }
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #4d52d6;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .grid {
+            display: flex;
+            gap: 20px;
+        }
+        .grid .form-group {
+            flex: 1;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                flex-direction: column;
+            }
+        }
+        .success-message {
+            color: green;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .home-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .home-button a {
+            text-decoration: none;
+        }
+        .home-button button {
+            width: auto;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>DWM Closing Form</h2>
+        <form action="#" method="POST">
+            <div class="grid">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <select id="location" name="Location" required>
+                        <option value="" disabled selected>Select Location</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Alwar">Alwar</option>
+                        <option value="Lucknow">Lucknow</option>
+                        <option value="Lucknow">Lucknow</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customer">Customer</label>
+                    <select id="customer" name="Customer" required>
+                        <option value="" disabled selected>Select Customer</option>
+                        <option value="Eshop Box">Eshop Box</option>
+                        <option value="Kothari">Kothari</option>
+                        <option value="Condor">Condor</option>
+                        <option value="Spario">Spario</option>
+                        <option value="My Window">My Window</option>
+                        <option value="Ashok laylend">Ashok laylend</option>
+                        <option value="Eveready">Eveready</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label for="id">ID</label>
+                    <input type="text" id="id" name="ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_time">Start Time</label>
+                    <input type="datetime-local" id="start_time" name="Start Time" required>
+                </div>
+                <div class="form-group">
+                    <label for="completion_time">Completion Time</label>
+                    <input type="datetime-local" id="completion_time" name="Completion Time" required>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="Date" required>
+                </div>
+                <div class="form-group">
+                    <label for="shift">Shift</label>
+                    <select id="shift" name="Shift" required>
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="night">Night</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Operational Metrics -->
+            <div class="grid-2">
+                <div>
+                    <label for="unloading_boxes">Unloading / Loading Boxes:</label>
+                    <input type="number" id="unloading_boxes" name="Unloading / Loading Boxes" placeholder="Unloading / Loading Boxes">
+                </div>
+                <div>
+                <label for="unloading_loading_boxes_manpower">Unloading / Loading Boxes Manpower:</label>
+                <input type="number" id="unloading_loading_boxes_manpower" name="Unloading / Loading Boxes Manpower" placeholder="Unloading / Loading Boxes Manpower">
+            </div>
+
+                <div>
+                    <label for="receipt_process_wms">Receipt Process in WMS (Boxes):</label>
+                    <input type="number" id="receipt_process_wms" name="Receipt Process in WMS (Boxes)" placeholder="Receipt Process in WMS (Boxes)">
+                </div>
+                <div>
+                <label for="receipt_process_wms_manpower">Receipt Process in WMS (Boxes) Manpower:</label>
+                <input type="number" id="receipt_process_wms_manpower" name="Receipt Process in WMS (Boxes) Manpower" placeholder="Receipt Process in WMS (Boxes) Manpower">
+            </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="grn_qc">Qty. GRN & QC:</label>
+                    <input type="number" id="grn_qc" name="Qty. GRN & QC" placeholder="GRN & QC">
+                </div>
+                <div>
+                <label for="grn_qc_manpower">Qty. GRN & QC Manpower:</label>
+                <input type="number" id="grn_qc_manpower" name="Qty. GRN & QC Manpower" placeholder="GRN & QC Manpower">
+            </div>
+                <div>
+                    <label for="putaway">Qty- Good Putaway:</label>
+                    <input type="number" id="putaway" name="Qty- Good Putaway" placeholder="Putaway">
+                </div>
+                <div>
+                <label for="putaway_manpower">Qty- Good Putaway Manpower:</label>
+                <input type="number" id="putaway_manpower" name="Qty- Good Putaway Manpower" placeholder="Qty- Good Putaway Manpower">
+            </div>
+            </div>
+            <div>
+                <label for="cycle_count">Qty- Cycle Count/Consolidation:</label>
+                <input type="number" id="cycle_count" name="Qty- Cycle Count/Consolidation" placeholder="Cycle Count">
+            </div>
+            <div>
+                <label for="cycle_count_manpower">Qty- Cycle Count/Consolidation Manpower:</label>
+                <input type="number" id="cycle_count_manpower" name="Qty- Cycle Count/Consolidation Manpower" placeholder="Qty- Cycle Count/Consolidation Manpower">
+            </div>
+
+            <div>
+                <label for="stn_direct_putaway">STN-Direct Putaway:</label>
+                <input type="number" id="stn_direct_putaway" name="STN-Direct Putaway" placeholder="STN-Direct Putaway">
+            </div>
+            <div>
+                <label for="stn_direct_putaway_manpower">STN-Direct Putaway Manpower:</label>
+                <input type="number" id="stn_direct_putaway_manpower" name="STN-Direct Putaway Manpower" placeholder="STN-Direct PutawayManpower">
+            </div>
+
+
+
+
+
+
+            <!-- Picking and Packing Information -->
+            <div class="grid-2">
+                <div>
+                    <label for="picked_qty_b2c">Qty. picked-B2C:</label>
+                    <input type="number" id="picked_qty_b2c" name="Qty. picked-B2C" placeholder="Picked QTY. (B2C)">
+                </div>
+                <div>
+                    <label for="picked_qty_b2c_manpower">Qty. picked-B2C Manpower:</label>
+                    <input type="number" id="picked_qty_b2c_manpower" name="Qty. picked-B2C Manpower" placeholder="Qty. picked-B2C Manpower">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2c">QTY(Invoiced+Packed)B2C:</label>
+                    <input type="number" id="qty_invoiced_packed_b2c" name="QTY(Invoiced+Packed)B2C" placeholder="QTY(Invoiced+Packed)B2C">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2c_manpower">QTY(Invoiced+Packed)B2C Manpower:</label>
+                    <input type="number" id="qty_invoiced_packed_b2c_manpower" name="QTY(Invoiced+Packed)B2C Manpower" placeholder="QTY(Invoiced+Packed)B2C Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="qty_manifest_handover_b2c">QTY.Manifest+Handover-B2C:</label>
+                    <input type="number" id="qty_manifest_handover_b2c" name="QTY.Manifest+Handover-B2C" placeholder="QTY.Manifest+Handover-B2C">
+                </div>
+                <div>
+                    <label for="qty_manifest_handover_b2c_manpower">QTY.Manifest+Handover-B2C Manpower:</label>
+                    <input type="number" id="qty_manifest_handover_b2c_manpower" name="QTY.Manifest+Handover-B2C Manpower" placeholder="QTY.Manifest+Handover-B2C Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="qty_invoiced_packed_b2b">QTY(Invoiced+Packed)B2B:</label>
+                    <input type="number" id="qty_invoiced_packed_b2b" name="QTY(Invoiced+Packed)B2B" placeholder="QTY(Invoiced+Packed)B2B">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2b_manpower">QTY(Invoiced+Packed)B2B Manpower:</label>
+                    <input type="number" id="qty_invoiced_packed_b2b_manpower" name="QTY(Invoiced+Packed)B2B Manpower" placeholder="QTY(Invoiced+Packed)B2B Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="picked_qty_b2b">Picked QTY. (B2B):</label>
+                    <input type="number" id="picked_qty_b2b" name="Picked QTY. (B2B)" placeholder="Picked QTY. (B2B)">
+                </div>
+                <div>
+                    <label for="picked_qty_b2b_manpower">Picked QTY. (B2B) Manpower:</label>
+                    <input type="number" id="picked_qty_b2b_manpower" name="Picked QTY. (B2B) Manpower" placeholder="Picked QTY. (B2B) Manpower">
+                </div>
+
+
+            </div>
+
+            <!-- RTO (Return to Origin) Information -->
+            <div class="grid-2">
+                <div>
+                    <label for="rto_received_qty_b2b_b2c">RTO Received QTY. (B2B/B2C):</label>
+                    <input type="number" id="rto_received_qty_b2b_b2c" name="RTO Received QTY. (B2B/B2C)" placeholder="RTO Received QTY.(B2B/B2C)">
+                </div>
+                <div>
+                <label for="rto_received_qty_b2b_b2c_manpower">RTO Received QTY. (B2B/B2C) Manpower:</label>
+                <input type="number" id="rto_received_qty_b2b_b2c_manpower" name="RTO Received QTY. (B2B/B2C) Manpower" placeholder="RTO Received QTY. (B2B/B2C) Manpower">
+            </div>
+                <div>
+                    <label for="rto_good_processing_return">RTO Good processing return:</label>
+                    <input type="number" id="rto_good_processing_return" name="RTO Good processing return" placeholder="RTO Good processing return">
+                </div>
+                <div>
+                <label for="rto_good_processing_return_manpower">RTO Good processing return Manpower:</label>
+                <input type="number" id="rto_good_processing_return_manpower" name="RTO Good processing return Manpower" placeholder="RTO Good processing return Manpower">
+            </div>
+            </div>
+            <div>
+                <label for="bad_processing_with_claim">Bad processing with claim:</label>
+                <input type="number" id="bad_processing_with_claim" name="Bad processing with claim" placeholder="Bad processing with claim">
+            </div>
+            <div>
+                <label for="bad_processing_with_claim_manpower">Bad processing with claim Manpower:</label>
+                <input type="number" id="bad_processing_with_claim_manpower" name="Bad processing with claim Manpower" placeholder="Bad processing with claim Manpower">
+            </div>
+            <div>
+                <label for="qty_gp_creation_qcr">Qty. GP Creation QCR:</label>
+                <input type="number" id="qty_gp_creation_qcr" name="Qty. GP Creation QCR" placeholder="Qty. GP Creation QCR">
+            </div>
+            <div>
+                <label for="qty_gp_creation_qcr_manpower">Qty. GP Creation QCR Manpower:</label>
+                <input type="number" id="qty_gp_creation_qcr_manpower" name="Qty. GP Creation QCR Manpower" placeholder="Qty. GP Creation QCR Manpower">
+            </div>
+            <div>
+                <label for="rto_putaway">RTO Putaway:</label>
+                <input type="number" id="rto_putaway" name="RTO Putaway" placeholder="RTO Putaway">
+            </div>
+
+
+            <div>
+                <label for="rto_putaway_manpower">RTO Putaway Manpower:</label>
+                <input type="number" id="rto_putaway_manpower" name="RTO Putaway Manpower" placeholder="RTO Putaway Manpower">
+            </div>
+<!--            <div>-->
+<!--                <label for="remarks3">Remark (If Any):</label>-->
+<!--                <textarea id="remarks3" name="remarks3"></textarea>-->
+<!--            </div>-->
+            <!-- GRN, STN, Putaway and RTV Quantities -->
+            <div>
+                <label for="grn_new_qty">GRN New Qty:</label>
+                <input type="number" id="grn_new_qty" name="GRN New Qty">
+            </div>
+            <div>
+                <label for="grn_achievement">GRN Achievement:</label>
+                <input type="number" id="grn_achievement" name="GRN Achievement">
+            </div>
+            <div>
+                <label for="stn_new_qty">STN New Qty:</label>
+                <input type="number" id="stn_new_qty" name="STN New Qty">
+            </div>
+            <div>
+                <label for="stn_achievement_qty">STN Achievement Qty:</label>
+                <input type="number" id="stn_achievement_qty" name="STN Achievement Qty">
+            </div>
+            <div>
+                <label for="putaway_new_qty">Putaway New Qty:</label>
+                <input type="number" id="putaway_new_qty" name="Putaway New Qty">
+            </div>
+            <div>
+                <label for="putaway_achievement_qty">Putaway Achievement Qty:</label>
+                <input type="number" id="putaway_achievement_qty" name="Putaway Achievement Qty">
+            </div>
+            <!-- Additional Quantities -->
+            <div>
+                <label for="putaway_cancel_new_qty">Putaway Cancel New Qty:</label>
+                <input type="number" id="putaway_cancel_new_qty" name="Putaway Cancel New Qty">
+            </div>
+            <div>
+                <label for="putaway_cancel_achievement_qty">Putaway Cancel Achievement Qty:</label>
+                <input type="number" id="putaway_cancel_achievement_qty" name="Putaway Cancel Achievement Qty">
+            </div>
+
+                <button type="submit">Submit Form</button>
+        </form>
+
+        {% if message %}
+        <div class="success-message">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        {% if show_home_button %}
+        <div class="home-button">
+            <a href="{{ url_for('home') }}">
+                <button>Go to Home</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

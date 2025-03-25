@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DWM Opening Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #faa5a5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px;
+        }
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #4d52d6;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        textarea {
+            resize: none;
+            height: 85px;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .grid {
+            display: flex;
+            gap: 20px;
+        }
+        .grid .form-group {
+            flex: 1;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>DWM Opening Form</h2>
+        <form action="#" method="POST">
+            <!-- Location and Customer -->
+            <div class="grid">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <select id="location" name="Location" required>
+                        <option value="" disabled selected>Select Location</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Alwar">Alwar</option>
+                        <option value="Lucknow">Lucknow</option>
+                        <option value="Lucknow">Lucknow</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customer">Customer</label>
+                    <select id="customer" name="Customer" required>
+                        <option value="" disabled selected>Select Customer</option>
+                        <option value="Eshop Box">Eshop Box</option>
+                        <option value="Kothari">Kothari</option>
+                        <option value="Condor">Condor</option>
+                        <option value="Spario">Spario</option>
+                        <option value="My Window">My Window</option>
+                        <option value="Ashok laylend">Ashok laylend</option>
+                        <option value="Eveready">Eveready</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="ID" placeholder="Enter ID" required>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="start_time">Start Time</label>
+                    <input type="datetime-local" id="start_time" name="Start Time" required>
+                </div>
+                <div class="form-group">
+                    <label for="completion_time">Completion Time</label>
+                    <input type="datetime-local" id="completion_time" name="Completion Time" required>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="Email" placeholder="Enter Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="Name" placeholder="Enter Name" required>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="Date" required>
+                </div>
+                <div class="form-group">
+                    <label for="shift_type">Shift</label>
+                    <select id="shift_type" name="Shift" required>
+                        <option value="" disabled selected>Select Shift</option>
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="night">Night</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Operational Information -->
+            <div class="grid">
+                <div class="form-group">
+                    <label for="dwm_conducted_by_name">DWM Conducted By</label>
+                    <input type="text" id="dwm_conducted_by_name" name="DWM Conducted By" placeholder="Enter Name">
+                </div>
+                <div class="form-group">
+                    <label for="inward_name">Inward Name</label>
+                    <input type="text" id="inward_name" name="Inward Name" placeholder="Enter Inward Name">
+                </div>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="inventory_name">Inventory Name</label>
+                    <input type="text" id="inventory_name" name="Inventory Name" placeholder="Enter Inventory Name">
+                </div>
+                <div class="form-group">
+                    <label for="outward_name">Outward Name</label>
+                    <input type="text" id="outward_name" name="Outward Name" placeholder="Enter Outward Name">
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+<!--            <div class="form-group">-->
+<!--                <label for="claim_name">Claim Name</label>-->
+<!--                <input type="text" id="claim_name" name="claim_name" placeholder="Enter Claim Name">-->
+<!--            </div>-->
+<!--            <div class="form-group">-->
+<!--                <label for="no_of_floor_associated">No. of Floors Associated</label>-->
+<!--                <input type="number" id="no_of_floor_associated" name="no_of_floor_associated" placeholder="Enter Number">-->
+<!--            </div>-->
+
+            <div class="form-group">
+                <label for="return_name">Return Name:</label>
+                <input type="text" id="return_name" name="Return Name" placeholder="Return Name">
+            </div>
+            <div>
+                <label for="claim_name">Claim Name:</label>
+                <input type="text" id="claim_name" name="Claim Name" placeholder="Claim Name">
+            </div>
+            <div>
+                <label for="gp_name">GP Name:</label>
+                <input type="text" id="gp_name" name="GP Name" placeholder="GP Name">
+            </div>
+            <div>
+                <label for="no_of_floor_associated">No of Floor Associated:</label>
+                <input type="number" id="no_of_floor_associated" name="No of Floor Associated" placeholder="No of Floor Associated">
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="unloading_boxes">Unloading / Loading Boxes:</label>
+                    <input type="number" id="unloading_boxes" name="Unloading / Loading Boxes" placeholder="Unloading / Loading Boxes">
+                </div>
+                <div>
+                <label for="unloading_loading_boxes_manpower">Unloading / Loading Boxes Manpower:</label>
+                <input type="number" id="unloading_loading_boxes_manpower" name="Unloading / Loading Boxes Manpower" placeholder="Unloading / Loading Boxes Manpower">
+            </div>
+
+                <div>
+                    <label for="receipt_process_wms">Receipt Process in WMS (Boxes):</label>
+                    <input type="number" id="receipt_process_wms" name="Receipt Process in WMS (Boxes)" placeholder="Receipt Process in WMS (Boxes)">
+                </div>
+                <div>
+                <label for="receipt_process_wms_manpower">Receipt Process in WMS (Boxes) Manpower:</label>
+                <input type="number" id="receipt_process_wms_manpower" name="Receipt Process in WMS (Boxes) Manpower" placeholder="Receipt Process in WMS (Boxes) Manpower">
+            </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="grn_qc">Qty. GRN & QC:</label>
+                    <input type="number" id="grn_qc" name="Qty. GRN & QC" placeholder="GRN & QC">
+                </div>
+                <div>
+                <label for="grn_qc_manpower">Qty. GRN & QC Manpower:</label>
+                <input type="number" id="grn_qc_manpower" name="Qty. GRN & QC Manpower" placeholder="GRN & QC Manpower">
+            </div>
+                <div>
+                    <label for="putaway">Qty- Good Putaway:</label>
+                    <input type="number" id="putaway" name="Qty- Good Putaway" placeholder="Putaway">
+                </div>
+                <div>
+                <label for="putaway_manpower">Qty- Good Putaway Manpower:</label>
+                <input type="number" id="putaway_manpower" name="Qty- Good Putaway Manpower" placeholder="Qty- Good Putaway Manpower">
+            </div>
+            </div>
+            <div>
+                <label for="cycle_count">Qty- Cycle Count/Consolidation:</label>
+                <input type="number" id="cycle_count" name="Qty- Cycle Count/Consolidation" placeholder="Cycle Count">
+            </div>
+            <div>
+                <label for="cycle_count_manpower">Qty- Cycle Count/Consolidation Manpower:</label>
+                <input type="number" id="cycle_count_manpower" name="Qty- Cycle Count/Consolidation Manpower" placeholder="Qty- Cycle Count/Consolidation Manpower">
+            </div>
+
+            <div>
+                <label for="stn_direct_putaway">STN-Direct Putaway:</label>
+                <input type="number" id="stn_direct_putaway" name="STN-Direct Putaway" placeholder="STN-Direct Putaway">
+            </div>
+            <div>
+                <label for="stn_direct_putaway_manpower">STN-Direct Putaway Manpower:</label>
+                <input type="number" id="stn_direct_putaway_manpower" name="STN-Direct Putaway Manpower" placeholder="STN-Direct PutawayManpower">
+            </div>
+
+
+
+
+
+
+            <!-- Picking and Packing Information -->
+            <div class="grid-2">
+                <div>
+                    <label for="picked_qty_b2c">Qty. picked-B2C:</label>
+                    <input type="number" id="picked_qty_b2c" name="Qty. picked-B2C" placeholder="Picked QTY. (B2C)">
+                </div>
+                <div>
+                    <label for="picked_qty_b2c_manpower">Qty. picked-B2C Manpower:</label>
+                    <input type="number" id="picked_qty_b2c_manpower" name="Qty. picked-B2C Manpower" placeholder="Qty. picked-B2C Manpower">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2c">QTY(Invoiced+Packed)B2C:</label>
+                    <input type="number" id="qty_invoiced_packed_b2c" name="QTY(Invoiced+Packed)B2C" placeholder="QTY(Invoiced+Packed)B2C">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2c_manpower">QTY(Invoiced+Packed)B2C Manpower:</label>
+                    <input type="number" id="qty_invoiced_packed_b2c_manpower" name="QTY(Invoiced+Packed)B2C Manpower" placeholder="QTY(Invoiced+Packed)B2C Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="qty_manifest_handover_b2c">QTY.Manifest+Handover-B2C:</label>
+                    <input type="number" id="qty_manifest_handover_b2c" name="QTY.Manifest+Handover-B2C" placeholder="QTY.Manifest+Handover-B2C">
+                </div>
+                <div>
+                    <label for="qty_manifest_handover_b2c_manpower">QTY.Manifest+Handover-B2C Manpower:</label>
+                    <input type="number" id="qty_manifest_handover_b2c_manpower" name="QTY.Manifest+Handover-B2C Manpower" placeholder="QTY.Manifest+Handover-B2C Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="qty_invoiced_packed_b2b">QTY(Invoiced+Packed)B2B:</label>
+                    <input type="number" id="qty_invoiced_packed_b2b" name="QTY(Invoiced+Packed)B2B" placeholder="QTY(Invoiced+Packed)B2B">
+                </div>
+                <div>
+                    <label for="qty_invoiced_packed_b2b_manpower">QTY(Invoiced+Packed)B2B Manpower:</label>
+                    <input type="number" id="qty_invoiced_packed_b2b_manpower" name="QTY(Invoiced+Packed)B2B Manpower" placeholder="QTY(Invoiced+Packed)B2B Manpower">
+                </div>
+
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="picked_qty_b2b">Picked QTY. (B2B):</label>
+                    <input type="number" id="picked_qty_b2b" name="Picked QTY. (B2B)" placeholder="Picked QTY. (B2B)">
+                </div>
+                <div>
+                    <label for="picked_qty_b2b_manpower">Picked QTY. (B2B) Manpower:</label>
+                    <input type="number" id="picked_qty_b2b_manpower" name="Picked QTY. (B2B) Manpower" placeholder="Picked QTY. (B2B) Manpower">
+                </div>
+
+
+            </div>
+
+            <!-- RTO (Return to Origin) Information -->
+            <div class="grid-2">
+                <div>
+                    <label for="rto_received_qty_b2b_b2c">RTO Received QTY. (B2B/B2C):</label>
+                    <input type="number" id="rto_received_qty_b2b_b2c" name="RTO Received QTY. (B2B/B2C)" placeholder="RTO Received QTY.(B2B/B2C)">
+                </div>
+                <div>
+                <label for="rto_received_qty_b2b_b2c_manpower">RTO Received QTY. (B2B/B2C) Manpower:</label>
+                <input type="number" id="rto_received_qty_b2b_b2c_manpower" name="RTO Received QTY. (B2B/B2C) Manpower" placeholder="RTO Received QTY. (B2B/B2C) Manpower">
+            </div>
+                <div>
+                    <label for="rto_good_processing_return">RTO Good processing return:</label>
+                    <input type="number" id="rto_good_processing_return" name="RTO Good processing return" placeholder="RTO Good processing return">
+                </div>
+                <div>
+                <label for="rto_good_processing_return_manpower">RTO Good processing return Manpower:</label>
+                <input type="number" id="rto_good_processing_return_manpower" name="RTO Good processing return Manpower" placeholder="RTO Good processing return Manpower">
+            </div>
+            </div>
+            <div>
+                <label for="bad_processing_with_claim">Bad processing with claim:</label>
+                <input type="number" id="bad_processing_with_claim" name="Bad processing with claim" placeholder="Bad processing with claim">
+            </div>
+            <div>
+                <label for="bad_processing_with_claim_manpower">Bad processing with claim Manpower:</label>
+                <input type="number" id="bad_processing_with_claim_manpower" name="Bad processing with claim Manpower" placeholder="Bad processing with claim Manpower">
+            </div>
+            <div>
+                <label for="qty_gp_creation_qcr">Qty. GP Creation QCR:</label>
+                <input type="number" id="qty_gp_creation_qcr" name="Qty. GP Creation QCR" placeholder="Qty. GP Creation QCR">
+            </div>
+            <div>
+                <label for="qty_gp_creation_qcr_manpower">Qty. GP Creation QCR Manpower:</label>
+                <input type="number" id="qty_gp_creation_qcr_manpower" name="Qty. GP Creation QCR Manpower" placeholder="Qty. GP Creation QCR Manpower">
+            </div>
+            <div>
+                <label for="rto_putaway">RTO Putaway:</label>
+                <input type="number" id="rto_putaway" name="RTO Putaway" placeholder="RTO Putaway">
+            </div>
+
+
+            <div>
+                <label for="rto_putaway_manpower">RTO Putaway Manpower:</label>
+                <input type="number" id="rto_putaway_manpower" name="RTO Putaway Manpower" placeholder="RTO Putaway Manpower">
+            </div>
+
+
+            <!-- Quantities and Returns -->
+            <div class="grid-2">
+                <div>
+                    <label for="grn_qty">GRN Qty:</label>
+                    <input type="number" id="grn_qty" name="GRN Qty">
+                </div>
+                <div>
+                    <label for="stn_qty">STN Qty:</label>
+                    <input type="number" id="stn_qty" name="STN Qty">
+                </div>
+            </div>
+            <div class="grid-2">
+
+                <div>
+                    <label for="putaway_cancel_qty">Putaway Cancel Qty:</label>
+                    <input type="number" id="putaway_cancel_qty" name="Putaway Cancel Qty">
+                </div>
+            </div>
+            <div>
+                <label for="putaway_return_qty">Putaway Return Qty:</label>
+                <input type="number" id="putaway_return_qty" name="Putaway Return Qty">
+            </div>
+            <div>
+                <label for="grn_sellable_qty">GRN Sellable Qty:</label>
+                <input type="number" id="grn_sellable_qty" name="GRN Sellable Qty">
+            </div>
+            <div>
+                <label for="bin_movement">Bin Movement:</label>
+                <input type="number" id="bin_movement" name="Bin Movement">
+            </div>
+            <div>
+                <label for="return">Return:</label>
+                <input type="number" id="return" name="Return">
+            </div>
+            <div>
+                <label for="rtv">RTV:</label>
+                <input type="number" id="rtv" name="RTV">
+            </div>
+
+            <!-- Channel Orders -->
+            <div>
+                <label for="channel_order_qty_b2c">Channel Order Qty (B2C):</label>
+                <input type="number" id="channel_order_qty_b2c" name="Channel Order Qty (B2C)">
+            </div>
+            <div>
+                <label for="rts_order_qty_b2c">RTS Order Qty (B2C):</label>
+                <input type="number" id="rts_order_qty_b2c" name="RTS Order Qty (B2C)">
+            </div>
+
+            <!-- Additional Information -->
+            <div class="grid-2">
+                <div>
+                    <label for="breached_qty">Breached Qty:</label>
+                    <input type="number" id="breached_qty" name="Breached Qty">
+                </div>
+                <div>
+                    <label for="side_lined">Side Lined:</label>
+                    <input type="number" id="side_lined" name="Side Lined">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label for="dispatch_not_marked">Dispatch Not Marked:</label>
+                    <input type="number" id="dispatch_not_marked" name="Dispatch Not Marked">
+                </div>
+                <div>
+                    <label for="not_dispatched_orders">Not Dispatched Orders:</label>
+                    <input type="number" id="not_dispatched_orders" name="Not Dispatched Orders">
+                </div>
+            </div>
+
+            <!-- FBA/FBF and Other Activities -->
+            <div>
+                <label for="fba_fbf">FBA/FBF:</label>
+                <input type="text" id="fba_fbf" name="FBA/FBF">
+            </div>
+            <div>
+                <label for="sap_transactions">SAP Transactions:</label>
+                <input type="text" id="sap_transactions" name="SAP Transactions">
+            </div>
+            <div>
+                <label for="b2b_return">B2B Return:</label>
+                <input type="number" id="b2b_return" name="B2B Return">
+            </div>
+
+            <div>
+                <label for="other_men_power">Other MenPower:</label>
+                <input type="number" id="other_men_power" name="Other MenPower">
+            </div>
+
+                    <!-- Quantities and Returns (continued) -->
+    <!--            <div>-->
+    <!--                <label for="putaway_qty">Putaway Qty:</label>-->
+    <!--                <input type="number" id="putaway_qty" name="putaway_qty">-->
+    <!--            </div>-->
+
+
+
+            <div>
+                <label for="bad_to_good">Bad to Good:</label>
+                <input type="number" id="bad_to_good" name="Bad to Good">
+            </div>
+
+            <!-- Blue Collar Attendance and Other Activities -->
+            <div>
+                <label for="blue_collar_attendance">Blue Collar Attendance:</label>
+                <input type="number" id="blue_collar_attendance" name="Blue Collar Attendance">
+            </div>
+
+            <!-- Notes -->
+            <div class="full-width">
+                <label for="comments">Comments/Notes:</label>
+                <textarea id="comments" name="Comments/Notes" rows="5"></textarea>
+            </div>
+
+
+    <!-- Continue with additional fields similarly -->
+
+
+            <!-- Submit Button -->
+            <button type="submit">Submit Form</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Data - {{ location }}</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Uploaded Data for {{ location }}</h1>
+        <div class="table-responsive">
+            {{ raw_data_html | safe }}
+        </div>
+        <a href="{{ url_for('pendency_sla') }}" class="btn btn-primary mt-4">Go Back to SLA Report</a>
+    </div>
+</body>
+</html>

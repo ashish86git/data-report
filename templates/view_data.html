@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Data</title>
+</head>
+<body>
+    <h1>Raw Data</h1>
+    <div>
+        <h4>Data Preview:</h4>
+        <div>
+            <!-- Render raw data from the uploaded file as an HTML table -->
+            {{ raw_data_html|safe }}
+        </div>
+    </div>
+    <br>
+    <a href="/sla_report/pendency_sla" class="btn btn-primary">Go Back</a>
+</body>
+</html>

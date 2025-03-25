@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .container { width: 90%; margin: auto; }
+        canvas { max-width: 600px; margin: 20px auto; }
+        .filter-box { margin: 20px; padding: 10px; border: 1px solid #ccc; display: flex; gap: 10px; justify-content: center; }
+        select { padding: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Power BI Style Smart Dashboard</h2>
+
+        <div class="filter-box">
+            <label>Location:</label>
+            <select id="locationFilter" onchange="updateCharts()">
+                <option value="All">All</option>
+            </select>
+
+            <label>Customer:</label>
+            <select id="customerFilter" onchange="updateCharts()">
+                <option value="All">All</option>
+            </select>
+
+            <label>Shift:</label>
+            <select id="shiftFilter" onchange="updateCharts()">
+                <option value="All">All</option>
+            </select>
+        </div>
+
+        <h3>Location Wise Distribution</h3>
+        <canvas id="barChart"></canvas>
+
+        <h3>Customer Wise Data</h3>
+        <canvas id="pieChart"></canvas>
+
+        <h3>Shift Wise Analysis</h3>
+        <canvas id="lineChart"></canvas>
+    </div>
+
+    <script>
+        function updateCharts() {
+            fetch('/get_graph_data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    }
+
+                    // Populate Filters
+                    populateFilters(data);
+
+                    const ctx1 = document.getElementById('barChart').getContext('2d');
+                    const ctx2 = document.getElementById('pieChart').getContext('2d');
+                    const ctx3 = document.getElementById('lineChart').getContext('2d');
+
+                    // Bar Chart - Locations
+                    new Chart(ctx1, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(data.locations),
+                            datasets: [{
+                                label: 'Locations',
+                                data: Object.values(data.locations),
+                                backgroundColor: '#4CAF50'
+                            }]
+                        }
+                    });
+
+                    // Pie Chart - Customers
+                    new Chart(ctx2, {
+                        type: 'pie',
+                        data: {
+                            labels: Object.keys(data.customers),
+                            datasets: [{
+                                label: 'Customers',
+                                data: Object.values(data.customers),
+                                backgroundColor: ['#FF9800', '#2196F3', '#F44336']
+                            }]
+                        }
+                    });
+
+                    // Line Chart - Shifts
+                    new Chart(ctx3, {
+                        type: 'line',
+                        data: {
+                            labels: Object.keys(data.shifts),
+                            datasets: [{
+                                label: 'Shifts',
+                                data: Object.values(data.shifts),
+                                borderColor: '#2196F3',
+                                fill: false
+                            }]
+                        }
+                    });
+                });
+        }
+
+        function populateFilters(data) {
+            const locationFilter = document.getElementById('locationFilter');
+            const customerFilter = document.getElementById('customerFilter');
+            const shiftFilter = document.getElementById('shiftFilter');
+
+            populateDropdown(locationFilter, data.locations);
+            populateDropdown(customerFilter, data.customers);
+            populateDropdown(shiftFilter, data.shifts);
+        }
+
+        function populateDropdown(element, data) {
+            element.innerHTML = '<option value="All">All</option>';
+            Object.keys(data).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = key;
+                element.appendChild(option);
+            });
+        }
+
+        updateCharts(); // Load Charts on Page Load
+        setInterval(updateCharts, 5000); // Auto-Update Every 5 Seconds
+    </script>
+</body>
+</html>

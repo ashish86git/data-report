@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan and Manual Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-container {
+            width: 50%;
+            margin: 0 auto;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Scan and Manual Entry</h1>
+    </header>
+
+    <main>
+        {% if message %}
+            <p style="color: green;">{{ message }}</p>
+            <p>Date and Time: {{ date_time }}</p>
+        {% endif %}
+
+        <div class="form-container">
+            <form method="POST">
+                <label for="employee_id">Employee ID:</label>
+                <input type="text" id="employee_id" name="employee_id" required><br>
+
+                <label for="employee_name">Employee Name:</label>
+                <input type="text" id="employee_name" name="employee_name" required><br>
+
+                <label for="customer_name">Customer Name:</label>
+                <input type="text" id="customer_name" name="customer_name" required><br>
+
+                <label for="order_price">Order Price:</label>
+                <input type="number" id="order_price" name="order_price" required><br>
+
+                <label for="total_qty">Total Quantity:</label>
+                <input type="number" id="total_qty" name="total_qty" required><br>
+
+                <label for="order_description">Order Description:</label>
+                <input type="text" id="order_description" name="order_description" required><br>
+
+                <button type="submit">Submit Entry</button>
+            </form>
+        </div>
+
+        {% if show_buttons %}
+        <div class="action-buttons">
+            <a href="{{ url_for('new_entry') }}"><button>New Entry</button></a>
+            <a href="{{ url_for('recent_entries') }}"><button>View Recent Entries</button></a>
+        </div>
+        {% endif %}
+
+        <!-- QR Scanner Section -->
+        <div class="qr-container">
+            <video id="qr-video" width="100%" height="auto"></video>
+            <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+            <script>
+                function onScanSuccess(decodedText, decodedResult) {
+                    alert("QR Code scanned: " + decodedText);
+                    document.getElementById('employee_id').value = decodedText;
+                }
+                function onScanFailure(error) {
+                    console.log(error);
+                }
+                const html5QrCode = new Html5Qrcode("qr-video");
+                html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess, onScanFailure);
+            </script>
+        </div>
+    </main>
+
+</body>
+</html>

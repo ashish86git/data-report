@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 70%;
+            margin: 30px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="file"] {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button[type="submit"] {
+            padding: 15px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .btn-view-data {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-view-data:hover {
+            background-color: #0056b3;
+        }
+
+        .file-upload input[type="file"] {
+            font-size: 16px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SLA Report - File Upload</h1>
+    </header>
+
+    <div class="container">
+        <h2>Upload Files for SLA Report</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="file-upload">
+                <label for="uploaded_file_loc1">Gurgaon:</label>
+                <input type="file" name="uploaded_file_loc1" id="uploaded_file_loc1">
+
+                <label for="uploaded_file_loc2">Mumbai:</label>
+                <input type="file" name="uploaded_file_loc2" id="uploaded_file_loc2">
+
+                <label for="uploaded_file_loc3">Hyderabad:</label>
+                <input type="file" name="uploaded_file_loc3" id="uploaded_file_loc3">
+            </div>
+
+            <button type="submit">Generate Report</button>
+        </form>
+        <a href="/download_report" class="btn btn-primary">Download Report</a>
+
+
+        <a href="/view_data_location_wise" class="btn-view-data">View Data Location-Wise</a>
+    </div>
+</body>
+</html>

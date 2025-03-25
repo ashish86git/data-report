@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Entries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Recent Entry</h1>
+    </header>
+
+    <main>
+        {% if recent_entry %}
+        <table>
+            <tr>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Customer Name</th>
+                <th>Order Price</th>
+                <th>Total Quantity</th>
+                <th>Order Description</th>
+                <th>Date and Time</th>
+            </tr>
+            <tr>
+                <td>{{ recent_entry.employee_id }}</td>
+                <td>{{ recent_entry.employee_name }}</td>
+                <td>{{ recent_entry.customer_name }}</td>
+                <td>{{ recent_entry.order_price }}</td>
+                <td>{{ recent_entry.total_qty }}</td>
+                <td>{{ recent_entry.order_description }}</td>
+                <td>{{ recent_entry.date_time }}</td>
+            </tr>
+        </table>
+        {% else %}
+        <p>No recent entry available.</p>
+        {% endif %}
+
+        <div class="action-buttons">
+            <a href="{{ url_for('dashboard') }}"><button>View Dashboard</button></a>
+        </div>
+    </main>
+
+</body>
+</html>

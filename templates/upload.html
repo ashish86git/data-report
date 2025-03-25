@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Upload File</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Upload File</h1>
+        <form action="/sla_report/unicom" method="post" enctype="multipart/form-data" class="mt-3">
+            <div class="form-group">
+                <label for="file">Choose CSV/Excel File</label>
+                <input type="file" name="file" id="file" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</body>
+</html>

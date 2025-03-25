@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Data Click</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #881b00;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: #a32300;
+        }
+
+        nav .dropdown {
+            position: relative;
+        }
+
+        nav .dropdown-btn {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            background-color: #b32c00;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #b32c00;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        nav .dropdown-content a {
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            font-size: 1em;
+            border-bottom: 1px solid #a32300;
+        }
+
+        nav .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        nav .dropdown-content a:hover {
+            background-color: #d33800;
+        }
+
+        nav .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            background-color: #b32c00;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #d33800;
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        main {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        main h2 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: #881b00;
+        }
+
+        main p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Features Section */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            color: #881b00;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .feature-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            color: white;
+            background-color: #b32c00;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .feature-card a:hover {
+            background-color: #d33800;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #881b00;
+            color: white;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Warehouse Data Click</h1>
+        <nav>
+            <div class="dropdown">
+                <div class="dropdown-btn">DWM Report</div>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('opening') }}">Opening Shift</a>
+                    <a href="{{ url_for('closing') }}">Closing Shift</a>
+                    <a href="{{ url_for('dwm_data_dashboard') }}">DWM Data Dashboard</a>
+                    <a href="{{ url_for('dwm_dashboard_ai') }}">DWM AI Dashboard</a>
+                    <a href="{{ url_for('projection_dashboard') }}">Projection Dashboard</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <div class="dropdown-btn">SLA Report</div>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('unicom') }}">Unicommerce</a>
+                    <a href="{{ url_for('eshopbox') }}">Eshop box</a>
+                    <a href="{{ url_for('pendency_sla') }}">Pendency Report</a>
+                </div>
+            </div>
+
+<!--            <a href="{{ url_for('sla_report') }}">SLA Report</a>-->
+            <a href="{{ url_for('kpi_report') }}">KPI Report</a>
+            <a href="{{ url_for('hrms_report') }}">HRMS Report</a>
+            <a href="{{ url_for('unicom_report') }}">Capacityv/s Execution</a>
+
+        </nav>
+    </header>
+    <main>
+        <h2>Explore the System</h2>
+        <p>Streamline your warehouse operations with ease. Select a feature below to get started.</p>
+        <div class="features">
+            <div class="feature-card">
+                <h3>DWM Report</h3>
+                <p>Manage daily work metrics efficiently.</p>
+                <a href="{{ url_for('dwm_dashboard_ai') }}">Explore</a>
+            </div>
+            <div class="feature-card">
+                <h3>SLA Report</h3>
+                <p>Ensure timely deliveries and monitor SLA compliance.</p>
+                <a href="{{ url_for('sla_report') }}">Explore</a>
+            </div>
+            <div class="feature-card">
+                <h3>KPI Report</h3>
+                <p>Track key performance indicators for better decisions.</p>
+                <a href="{{ url_for('kpi_report') }}">Explore</a>
+            </div>
+            <div class="feature-card">
+                <h3>HRMS Report</h3>
+                <p>Analyze employee performance and attendance data.</p>
+                <a href="{{ url_for('hrms_report') }}">Explore</a>
+            </div>
+            <div class="feature-card">
+                <h3>Unicom Report</h3>
+                <p>Get detailed reports on unified communication systems.</p>
+                <a href="{{ url_for('unicom_report') }}">Explore</a>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Warehouse Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

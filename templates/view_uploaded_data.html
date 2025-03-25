@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Data</title>
+</head>
+<body>
+    <h1>Uploaded Data</h1>
+
+    {% if uploaded_data %}
+        {% for filename, data in uploaded_data.items() %}
+            <h2>{{ filename }}</h2>
+            <div>
+                {{ data|safe }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No data available to display.</p>
+    {% endif %}
+
+    <a href="/eshopbox" class="btn">Go Back to View Files</a>
+</body>
+</html>

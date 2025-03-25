@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary</title>
+</head>
+<body>
+    <h1>Recent Entry</h1>
+    {% if recent_entry %}
+    <table border="1">
+        <tr>
+            <th>Scan Date</th>
+            <th>Scan Time</th>
+            <th>Order ID</th>
+            <th>Order Details</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Total Quantity</th>
+            <th>Total Orders</th>
+            <th>Manpower Count</th>
+            <th>Shipping Quantity</th>
+        </tr>
+        <tr>
+            <td>{{ recent_entry.scan_date }}</td>
+            <td>{{ recent_entry.scan_time }}</td>
+            <td>{{ recent_entry.order_id }}</td>
+            <td>{{ recent_entry.order_details }}</td>
+            <td>{{ recent_entry.employee_id }}</td>
+            <td>{{ recent_entry.employee_name }}</td>
+            <td>{{ recent_entry.total_qty }}</td>
+            <td>{{ recent_entry.total_order }}</td>
+            <td>{{ recent_entry.manpower_count }}</td>
+            <td>{{ recent_entry.shipping_qty }}</td>
+        </tr>
+    </table>
+    {% else %}
+    <p>No data available.</p>
+    {% endif %}
+    <a href="/dashboard"><button>Go to Dashboard</button></a>
+</body>
+</html>
