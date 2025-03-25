@@ -238,7 +238,18 @@ def dwm_data_dashboard():
 @app.route('/dwm_report/dwm_dashboard_ai', methods=['GET', 'POST'])
 def dwm_dashboard_ai():
     df = load_and_merge_entries()
-    master_file = pd.read_csv(r"C:\Users\ashis\PycharmProjects\tral\master_data.csv")  # Master file
+    # master_file = pd.read_csv(r"C:\Users\ashis\PycharmProjects\tral\master_data.csv")  # Master file
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "master_data.csv")  # Correct Path
+
+    try:
+        master_file = pd.read_csv(file_path)  # ✅ Read CSV as DataFrame
+    except FileNotFoundError:
+        print(f"❌ Error: master_data.csv file not found at {file_path}")
+        return "Error: master_data.csv file not found!", 500
+    except Exception as e:
+        print(f"❌ Unexpected Error: {e}")
+        return f"Unexpected Error: {e}", 500
 
     if df.empty:
         return render_template('dwm_dashboard_ai.html', table_data=[], unique_dates=[], unique_shifts=[],
