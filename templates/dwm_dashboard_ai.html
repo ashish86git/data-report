@@ -1,159 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DWM Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Arial', sans-serif;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            font-weight: bold;
-            color: #333;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #007bff;
-        }
-        .btn-primary, .btn-secondary, .btn-success {
-            border-radius: 25px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .btn-primary:hover {
-            background: #0056b3;
-        }
-        .btn-success:hover {
-            background: #218838;
-        }
-        .filter-section {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        table {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        th {
-            background: #007bff !important;
-            color: white !important;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DWM Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Arial', sans-serif;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      font-weight: bold;
+      color: #333;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #007bff;
+    }
+    .btn {
+      border-radius: 25px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-success:hover { background: #218838; }
+    .filter-section {
+      background: #e9ecef;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .table-responsive {
+      border-radius: 10px;
+      overflow: auto;
+    }
+    th {
+      background: #007bff !important;
+      color: white !important;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .nowrap-cell {
+      white-space: nowrap;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h2 class="text-center">📊 DWM Report Dashboard</h2>
+  <div class="container mt-4">
+    <h2 class="text-center">📊 DWM Report Dashboard</h2>
 
-        <!-- Filter Form -->
-        <div class="filter-section">
-            <form method="POST" class="row g-3">
-                <div class="col-md-3">
-                    <label for="Date" class="form-label">📅 Date</label>
-                    <select class="form-select" name="Date">
-                        <option value="">All</option>
-                        {% for date in unique_dates %}
-                            <option value="{{ date }}" {% if date == selected_date %}selected{% endif %}>{{ date }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="Shift" class="form-label">⏳ Shift</label>
-                    <select class="form-select" name="Shift">
-                        <option value="">All</option>
-                        {% for shift in unique_shifts %}
-                            <option value="{{ shift }}" {% if shift == selected_shift %}selected{% endif %}>{{ shift }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="Location" class="form-label">📍 Location</label>
-                    <select class="form-select" name="Location">
-                        <option value="">All</option>
-                        {% for location in unique_locations %}
-                            <option value="{{ location }}" {% if location == selected_location %}selected{% endif %}>{{ location }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="Customer" class="form-label">👤 Customer</label>
-                    <select class="form-select" name="Customer">
-                        <option value="">All</option>
-                        {% for customer in unique_customers %}
-                            <option value="{{ customer }}" {% if customer == selected_customer %}selected{% endif %}>{{ customer }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-12 d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-primary">🔍 Apply Filters</button>
-                    <button type="submit" name="clear_filters" class="btn btn-secondary">🔄 Clear Filters</button>
-                </div>
-            </form>
+    <!-- Filter Form -->
+    <div class="filter-section">
+      <form method="POST" class="row g-3">
+        <div class="col-md-3">
+          <label for="Date" class="form-label">📅 Date</label>
+          <select class="form-select" name="Date">
+            <option value="">All</option>
+            {% for date in unique_dates %}
+              <option value="{{ date }}" {% if date == selected_date %}selected{% endif %}>{{ date }}</option>
+            {% endfor %}
+          </select>
         </div>
-
-        <div class="text-end mt-3">
-            <a href="{{ url_for('download_report') }}" class="btn btn-success">📥 Download Report</a>
+        <div class="col-md-3">
+          <label for="Shift" class="form-label">⏳ Shift</label>
+          <select class="form-select" name="Shift">
+            <option value="">All</option>
+            {% for shift in unique_shifts %}
+              <option value="{{ shift }}" {% if shift == selected_shift %}selected{% endif %}>{{ shift }}</option>
+            {% endfor %}
+          </select>
         </div>
-
-        <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>🏢 Department</th>
-                        <th>📌 Activity</th>
-                        <th>📊 Benchmark</th>
-                        <th>👥 Head Count</th>
-                        <th>🛠 Deployed Manpower</th>
-                        <th>🎯 Target</th>
-                        <th>👷 Required Manpower</th>
-                        <th>➕ Extra Manpower</th>
-                        <th>⚡ Execution</th>
-                        <th>💪 Capacity</th>
-                        <th>📦 Planned Load</th>
-                        <th>📉 Capacity Vs Execution</th>
-                        <th>📈 Target Vs Execution</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in table_data %}
-                    <tr>
-                        <td>{{ row.Department if row.Department else 'N/A' }}</td>
-                        <td>{{ row.Activity if row.Activity else 'N/A' }}</td>
-                        <td>{{ row.Benchmark if row.Benchmark else 'N/A' }}</td>
-                        <td>{{ row["Head Count"] if row["Head Count"] else 'N/A' }}</td>
-                        <td>{{ row["Deployed Manpower"] if row["Deployed Manpower"] else 'N/A' }}</td>
-                        <td>{{ row.Target if row.Target else 'N/A' }}</td>
-                        <td>{{ row["Required Manpower"] if row["Required Manpower"] else 'N/A' }}</td>
-                        <td>{{ row["Extra Manpower"] if row["Extra Manpower"] else 'N/A' }}</td>
-                        <td>{{ row.Execution if row.Execution else 'N/A' }}</td>
-                        <td>{{ row.Capacity if row.Capacity else 'N/A' }}</td>
-                        <td>{{ row["Planned Load"] if row["Planned Load"] else 'N/A' }}</td>
-                        <td>{{ row["Capacity Vs Execution"] if row["Capacity Vs Execution"] else 'N/A' }}</td>
-                        <td>{{ row["Target Vs Execution"] if row["Target Vs Execution"] else 'N/A' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-md-3">
+          <label for="Location" class="form-label">📍 Location</label>
+          <select class="form-select" name="Location">
+            <option value="">All</option>
+            {% for location in unique_locations %}
+              <option value="{{ location }}" {% if location == selected_location %}selected{% endif %}>{{ location }}</option>
+            {% endfor %}
+          </select>
         </div>
+        <div class="col-md-3">
+          <label for="Customer" class="form-label">👤 Customer</label>
+          <select class="form-select" name="Customer">
+            <option value="">All</option>
+            {% for customer in unique_customers %}
+              <option value="{{ customer }}" {% if customer == selected_customer %}selected{% endif %}>{{ customer }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12 d-flex justify-content-between mt-3">
+          <button type="submit" class="btn btn-primary">🔍 Apply Filters</button>
+          <button type="submit" name="clear_filters" class="btn btn-secondary">🔄 Clear Filters</button>
+        </div>
+      </form>
     </div>
+
+    <div class="text-end mt-3 d-flex justify-content-end gap-2">
+      <a href="{{ url_for('download_report') }}" class="btn btn-success">📥 Download Report</a>
+      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#pendencyModal">📋 Pendency Details</button>
+    </div>
+
+    <div class="table-responsive mt-4">
+      <table class="table table-bordered table-striped text-center">
+        <thead>
+          <tr>
+            <th>🏢 Department</th>
+            <th>📌 Activity</th>
+            <th>📊 Benchmark</th>
+            <th>👥 Head Count</th>
+            <th>📦 Planned Load</th>
+            <th>👥 Pendency</th>
+            <th>🛠 Deployed Manpower</th>
+            <th>🎯 Target</th>
+            <th>👷 Required Manpower</th>
+            <th>➕ Extra Manpower</th>
+            <th>⚡ Execution</th>
+            <th>💪 Capacity</th>
+            <th>📉 Capacity Vs Execution</th>
+            <th>📈 Target Vs Execution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+          <tr>
+            <td>{{ row.Department or 'N/A' }}</td>
+            <td>{{ row.Activity or 'N/A' }}</td>
+            <td>{{ row.Benchmark or 'N/A' }}</td>
+            <td>{{ row["Head Count"] or 'N/A' }}</td>
+            <td>{{ row["Planned Load"] or 'N/A' }}</td>
+            <td>{{ row["Pendency"] or 'N/A' }}</td>
+            <td>{{ row["Deployed Manpower"] or 'N/A' }}</td>
+            <td>{{ row.Target or 'N/A' }}</td>
+            <td>{{ row["Required Manpower"] or 'N/A' }}</td>
+            <td>{{ row["Extra Manpower"] or 'N/A' }}</td>
+            <td>{{ row.Execution or 'N/A' }}</td>
+            <td>{{ row.Capacity or 'N/A' }}</td>
+            <td class="nowrap-cell">{{ row["Capacity Vs Execution"] or 'N/A' }}</td>
+            <td class="nowrap-cell">{{ row["Target Vs Execution"] or 'N/A' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pendency Modal -->
+  <!-- Pendency Modal -->
+  <div class="modal fade" id="pendencyModal" tabindex="-1" aria-labelledby="pendencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title fw-bold" id="pendencyModalLabel">📋 Pendency Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% if pendency_details %}
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center">
+              <thead class="table-primary">
+                <tr>
+                  <th>Field</th>
+                  <th>Yesterday Closing</th>
+                  <th>Today Opening</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in pendency_details %}
+                <tr>
+                  <td>{{ item['Field'] }}</td>
+                  <td>{{ item['Yesterday Closing'] }}</td>
+                  <td>{{ item['Today Opening'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-center text-muted">No pendency data available for the selected filters/date.</p>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">❌ Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

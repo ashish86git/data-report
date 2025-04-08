@@ -183,6 +183,54 @@
             margin: 0;
             font-size: 0.9em;
         }
+
+        /* Add this media query for mobile responsiveness */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav .dropdown-btn, nav a {
+                display: block;
+                margin: 10px 0;
+                width: 90%;
+                text-align: center;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-card {
+                width: 90%;
+            }
+
+            main h2 {
+                font-size: 1.5em;
+            }
+
+            main p {
+                font-size: 1em;
+            }
+        }
+
+        /* Add word wrapping for labels */
+        label {
+            display: block;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+
+
+
     </style>
 </head>
 <body>
@@ -196,7 +244,7 @@
                     <a href="{{ url_for('closing') }}">Closing Shift</a>
                     <a href="{{ url_for('dwm_data_dashboard') }}">DWM Data Dashboard</a>
                     <a href="{{ url_for('dwm_dashboard_ai') }}">DWM AI Dashboard</a>
-                    <a href="{{ url_for('projection_dashboard') }}">Projection Dashboard</a>
+
                 </div>
             </div>
 
@@ -209,7 +257,7 @@
                 </div>
             </div>
 
-<!--            <a href="{{ url_for('sla_report') }}">SLA Report</a>-->
+            <a href="{{ url_for('sla_report') }}">SLA Report</a>
             <a href="{{ url_for('kpi_report') }}">KPI Report</a>
             <a href="{{ url_for('hrms_report') }}">HRMS Report</a>
             <a href="{{ url_for('unicom_report') }}">Capacityv/s Execution</a>
