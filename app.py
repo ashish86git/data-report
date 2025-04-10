@@ -7,11 +7,15 @@ from datetime import datetime, timedelta
 from datetime import datetime
 from datetime import datetime, timedelta
 import pandas as pd
+import numpy as np
 from io import BytesIO
 import pyqrcode
 import random
 import os
 import io
+import psycopg2
+import os
+from urllib.parse import urlparse
 from datetime import datetime
 import os
 import smtplib
@@ -29,6 +33,19 @@ from flask import send_from_directory
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+
+# ✅ Heroku PostgreSQL Connection Setup
+DATABASE_URL = "postgres://u7tqojjihbpn7s:p1b1897f6356bab4e52b727ee100290a84e4bf71d02e064e90c2c705bfd26f4a5@c7s7ncbk19n97r.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d8lp4hr6fmvb9m"
+url = urlparse(DATABASE_URL)
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+cur = conn.cursor()
+
 
 # Define the path to the file for storing entries
 entries_file = 'entries.csv'
@@ -52,7 +69,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Load entries from the CSV file
 def load_entries():
     if os.path.exists(entries_file):
@@ -102,17 +119,58 @@ def save_entry_to_csv(entry, filename):
 @app.route('/dwm_report/opening', methods=['GET', 'POST'])
 def opening():
     if request.method == 'POST':
-        form_data = request.form.to_dict()
-        form_data['source'] = 'Opening'
-        form_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        integer_fields = [
+            'grn_qty_pendency', 'stn_qty_pendency', 'putaway_cancel_qty_pendency',
+            'putaway_return_qty_pendency', 'grn_sellable_qty_pendency', 'bin_movement_pendency',
+            'return_pendency', 'rtv_pendency', 'channel_order_qty_b2c_pendency',
+            'rts_order_qty_b2c_pendency', 'breached_qty_pendency', 'side_lined_pendency',
+            'dispatch_not_marked', 'not_dispatched_orders', 'no_of_floor_associated',
+            'unloading_loading_boxes', 'unloading_loading_boxes_manpower', 'receipt_process_boxes',
+            'receipt_process_boxes_manpower', 'qty_grn_qc', 'qty_grn_qc_manpower',
+            'qty_good_putaway', 'qty_good_putaway_manpower', 'qty_cycle_count',
+            'qty_cycle_count_manpower', 'stn_direct_putaway', 'stn_direct_putaway_manpower',
+            'qty_picked_b2c', 'qty_picked_b2c_manpower', 'qty_invoiced_packed_b2c',
+            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c',
+            'qty_manifest_handover_b2c_manpower', 'qty_invoiced_packed_b2b',
+            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b', 'picked_qty_b2b_manpower',
+            'rto_received_qty', 'rto_received_qty_manpower', 'rto_putaway_qty',
+            'rto_putaway_qty_manpower', 'qty_gp_creation_qcr', 'qty_gp_creation_qcr_manpower',
+            'rto_good_processing_return', 'rto_good_processing_return_manpower',
+            'bad_processing_with_claim', 'bad_processing_with_claim_manpower'
+        ]
 
-        # ✅ Opening data ko opening.csv me store karein
-        save_entry_to_csv(form_data, OPENING_CSV)
+        cleaned_data = {}
+        for key in request.form:
+            value = request.form[key].strip()
+            if key in integer_fields:
+                try:
+                    cleaned_data[key] = int(value) if value != '' else None
+                except ValueError:
+                    cleaned_data[key] = None
+            else:
+                cleaned_data[key] = value if value != '' else None
 
-        return render_template('opening.html', message="Opening data submitted successfully!")
+        # Add source and timestamp
+        cleaned_data['source'] = 'Opening'
+        cleaned_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    return render_template('opening.html')
+        # Prepare query
+        columns = ', '.join(cleaned_data.keys())
+        placeholders = ', '.join(['%s'] * len(cleaned_data))
+        values = tuple(cleaned_data.values())
+        query = f"INSERT INTO opening_dwm ({columns}) VALUES ({placeholders})"
 
+        try:
+            cur.execute(query, values)
+            conn.commit()
+            message = "✅ Opening data submitted successfully!"
+        except Exception as e:
+            conn.rollback()
+            message = f"❌ Error: {str(e)}"
+
+        return render_template("opening.html", message=message)
+
+    return render_template("opening.html")
 
 
 
@@ -120,145 +178,165 @@ def opening():
 @app.route('/dwm_report/closing', methods=['GET', 'POST'])
 def closing():
     if request.method == 'POST':
-        form_data = request.form.to_dict()
-        form_data['source'] = 'Closing'
-        form_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        integer_fields = [
+            'grn_qty_pendency', 'stn_qty_pendency', 'putaway_cancel_qty_pendency',
+            'putaway_return_qty_pendency', 'grn_sellable_qty_pendency', 'bin_movement_pendency',
+            'return_pendency', 'rtv_pendency', 'channel_order_qty_b2c_pendency',
+            'rts_order_qty_b2c_pendency', 'breached_qty_pendency', 'side_lined_pendency',
+            'dispatch_not_marked', 'not_dispatched_orders', 'no_of_floor_associated',
+            'unloading_loading_boxes', 'unloading_loading_boxes_manpower', 'receipt_process_boxes',
+            'receipt_process_boxes_manpower', 'qty_grn_qc', 'qty_grn_qc_manpower',
+            'qty_good_putaway', 'qty_good_putaway_manpower', 'qty_cycle_count',
+            'qty_cycle_count_manpower', 'stn_direct_putaway', 'stn_direct_putaway_manpower',
+            'qty_picked_b2c', 'qty_picked_b2c_manpower', 'qty_invoiced_packed_b2c',
+            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c',
+            'qty_manifest_handover_b2c_manpower', 'qty_invoiced_packed_b2b',
+            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b', 'picked_qty_b2b_manpower',
+            'rto_received_qty', 'rto_received_qty_manpower', 'rto_putaway_qty',
+            'rto_putaway_qty_manpower', 'qty_gp_creation_qcr', 'qty_gp_creation_qcr_manpower',
+            'rto_good_processing_return', 'rto_good_processing_return_manpower',
+            'bad_processing_with_claim', 'bad_processing_with_claim_manpower'
+        ]
 
-        # ✅ Closing data ko closing.csv me store karein
-        save_entry_to_csv(form_data, CLOSING_CSV)
+        cleaned_data = {}
+        for key in request.form:
+            value = request.form[key].strip()
+            if key in integer_fields:
+                try:
+                    cleaned_data[key] = int(value) if value != '' else None
+                except ValueError:
+                    cleaned_data[key] = None
+            else:
+                cleaned_data[key] = value if value != '' else None
 
-        return render_template('closing.html', message="Closing data submitted successfully!")
+        cleaned_data['source'] = 'Closing'
+        cleaned_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    return render_template('closing.html')
+        columns = ', '.join(cleaned_data.keys())
+        placeholders = ', '.join(['%s'] * len(cleaned_data))
+        values = tuple(cleaned_data.values())
+        query = f"INSERT INTO closing_dwm ({columns}) VALUES ({placeholders})"
+
+        try:
+            cur.execute(query, values)
+            conn.commit()
+            message = "✅ Closing data submitted successfully!"
+        except Exception as e:
+            conn.rollback()
+            message = f"❌ Error: {str(e)}"
+
+        return render_template("closing.html", message=message)
+
+    return render_template("closing.html")
 
 
 # DWM Row data dashboard
-def load_and_merge_entries():
-    """Opening aur Closing CSV files ko merge kare Date aur Shift columns ke basis par"""
+def load_and_merge_entries_from_db():
+    """Fetch and merge opening_dwm and closing_dwm tables from DB."""
     try:
-        df_opening = pd.read_csv(OPENING_CSV)
-        df_closing = pd.read_csv(CLOSING_CSV)
-    except FileNotFoundError:
-        print("Error: Opening ya Closing CSV file nahi mili!")
-        return pd.DataFrame()  # Agar koi file nahi mili to empty DataFrame return karein
-
-    # Ensure Date column is in datetime format
+        df_opening = pd.read_sql("SELECT * FROM opening_dwm", conn)
+        df_closing = pd.read_sql("SELECT * FROM closing_dwm", conn)
+    except Exception as e:
+        print(f"❌ Error fetching data from DB: {e}")
+        return pd.DataFrame()
+    # Standardize column names
+    df_opening.rename(columns=str.title, inplace=True)
+    df_closing.rename(columns=str.title, inplace=True)
+    # Convert date column
     df_opening["Date"] = pd.to_datetime(df_opening["Date"], errors='coerce')
     df_closing["Date"] = pd.to_datetime(df_closing["Date"], errors='coerce')
 
-    # Check for NaT values in Date
-    if df_opening["Date"].isna().sum() > 0 or df_closing["Date"].isna().sum() > 0:
-        print("Warning: Kuch dates invalid hain, unhe NaT bana diya gaya hai!")
+    if df_opening["Date"].isna().any() or df_closing["Date"].isna().any():
+        print("⚠️ Warning: Invalid dates found!")
 
-    # Columns jo suffix se exclude honge
-    excluded_columns = {"Date", "Shift", "Location", "Customer"}
+    # Rename columns with suffixes except merge keys
+    merge_keys = ["Date", "Shift", "Location", "Customer"]
+    df_opening = df_opening.rename(columns={col: f"{col}_opening" if col not in merge_keys else col for col in df_opening.columns})
+    df_closing = df_closing.rename(columns={col: f"{col}_closing" if col not in merge_keys else col for col in df_closing.columns})
 
-    # Opening aur Closing columns ke suffixes lagana
-    df_opening = df_opening.rename(
-        columns={col: f"{col}_opening" if col not in excluded_columns else col for col in df_opening.columns})
-    df_closing = df_closing.rename(
-        columns={col: f"{col}_closing" if col not in excluded_columns else col for col in df_closing.columns})
-
-    # Merge on Date, Shift, Location, and Customer
-    merged_df = pd.merge(df_opening, df_closing, on=["Date", "Shift", "Location", "Customer"], how="outer")
-
-    # Final Output
-    print("✅ Merging complete! Rows:", len(merged_df))
-
+    merged_df = pd.merge(df_opening, df_closing, on=merge_keys, how="outer")
+    print(f"✅ Merged rows: {len(merged_df)}")
     return merged_df
 
 
 
 @app.route('/dwm_report/dwm_data_dashboard', methods=['GET', 'POST'])
 def dwm_data_dashboard():
-    df = load_and_merge_entries()  # Load merged data
+    df = load_and_merge_entries_from_db()
 
     if df.empty:
         return render_template('dwm_dashboard.html', data="<h3>No Data Available</h3>")
 
-    # Default filter values
-    current_filter = 'All'
-    current_date = 'All'
-    current_location = 'All'
-    current_customer = 'All'
+    # Dropdown values based on available unique combinations
+    all_dates = sorted(df["Date"].dropna().dt.strftime("%Y-%m-%d").unique())
+    all_locations = sorted(df["Location"].dropna().unique())
+    all_customers = sorted(df["Customer"].dropna().unique())
+    all_shifts = sorted(df["Shift"].dropna().unique())
 
-    # Filtering logic
+    current_date = current_location = current_customer = current_shift = 'All'
+
     if request.method == 'POST':
         if 'clear_filters' in request.form:
             return render_template('dwm_dashboard.html',
-                                   data=df.to_html(classes='table table-striped table-bordered', index=False),
-                                   current_filter='All',
+                                   data=df.to_html(classes='table table-bordered', index=False),
+                                   all_dates=all_dates,
+                                   all_locations=all_locations,
+                                   all_customers=all_customers,
+                                   all_shifts=all_shifts,
                                    current_date='All',
                                    current_location='All',
-                                   current_customer='All')
+                                   current_customer='All',
+                                   current_shift='All')
 
-        # Get form values
-        current_filter = request.form.get('filter', 'All')
         current_date = request.form.get('Date', 'All')
         current_location = request.form.get('Location', 'All')
         current_customer = request.form.get('Customer', 'All')
+        current_shift = request.form.get('Shift', 'All')
 
-        # Apply filters
-        filtered_data = df.copy()
-
-        # Date Filter
-        if current_date != 'All' and current_date.strip():
-            filtered_data = filtered_data[filtered_data["Date"] == current_date]
-
-        # Location Filter
+        if current_date != 'All':
+            df = df[df["Date"].dt.strftime("%Y-%m-%d") == current_date]
         if current_location != 'All':
-            filtered_data = filtered_data[filtered_data['Location'] == current_location]
-
-        # Customer Filter
+            df = df[df["Location"] == current_location]
         if current_customer != 'All':
-            filtered_data = filtered_data[filtered_data['Customer'] == current_customer]
-
-        return render_template('dwm_dashboard.html',
-                               data=filtered_data.to_html(classes='table table-striped table-bordered', index=False),
-                               current_filter=current_filter,
-                               current_date=current_date,
-                               current_location=current_location,
-                               current_customer=current_customer)
+            df = df[df["Customer"] == current_customer]
+        if current_shift != 'All':
+            df = df[df["Shift"] == current_shift]
 
     return render_template('dwm_dashboard.html',
                            data=df.to_html(classes='table table-striped table-bordered', index=False),
-                           current_filter=current_filter,
+                           all_dates=all_dates,
+                           all_locations=all_locations,
+                           all_customers=all_customers,
+                           all_shifts=all_shifts,
                            current_date=current_date,
                            current_location=current_location,
-                           current_customer=current_customer)
+                           current_customer=current_customer,
+                           current_shift=current_shift)
+
 
 
 @app.route('/dwm_report/dwm_dashboard_ai', methods=['GET', 'POST'])
 def dwm_dashboard_ai():
-    df = load_and_merge_entries()
+    df = load_and_merge_entries_from_db()
 
-    # master_file = pd.read_csv(r"C:\Users\ashis\PycharmProjects\tral\master_data.csv")  # Master file
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(BASE_DIR, "master_data.csv")  # Correct Path
-
+    master_path = os.path.join(BASE_DIR, "master_data.csv")
     try:
-        master_file = pd.read_csv(file_path)  # ✅ Read CSV as DataFrame
-    except FileNotFoundError:
-        print(f"❌ Error: master_data.csv file not found at {file_path}")
-        return "Error: master_data.csv file not found!", 500
-    except Exception as e:
-        print(f"❌ Unexpected Error: {e}")
-        return f"Unexpected Error: {e}", 500
+        master_file = pd.read_csv(master_path)
+    except Exception:
+        return "Error: master_data.csv not found!", 500
 
     if df.empty:
-        return render_template('dwm_dashboard_ai.html', table_data=[], unique_dates=[], unique_shifts=[],
+        return render_template("dwm_dashboard_ai.html", table_data=[], unique_dates=[], unique_shifts=[],
                                unique_locations=[], unique_customers=[])
 
-    # Default filters
     current_date = request.form.get("Date", "")
     current_shift = request.form.get("Shift", "")
     current_location = request.form.get("Location", "")
     current_customer = request.form.get("Customer", "")
 
-    # Apply filters if the form is submitted
     if request.method == 'POST':
         if 'clear_filters' in request.form:
-            current_date, current_shift, current_location, current_customer = "", "", "", ""  # Reset filters
+            current_date, current_shift, current_location, current_customer = "", "", "", ""
         else:
             if current_date:
                 df = df[df["Date"] == current_date]
@@ -269,117 +347,138 @@ def dwm_dashboard_ai():
             if current_customer:
                 df = df[df["Customer"] == current_customer]
 
-    # Benchmark Data
     benchmark_data = [
-        {"Department": "Inward", "Activity": "Unloading / Loading Boxes", "Benchmark": 150},
-        {"Department": "Inward", "Activity": "Receipt Process in WMS (Boxes)", "Benchmark": 150},
-        {"Department": "Inward", "Activity": "Qty. GRN & QC", "Benchmark": 1100},
-        {"Department": "Inventory", "Activity": "Qty - Good Putaway", "Benchmark": 1500},
-        {"Department": "Inventory", "Activity": "Qty - Cycle Count/Consolidation", "Benchmark": 2000},
-        {"Department": "Inventory", "Activity": "STN - Direct Putaway", "Benchmark": 1500},
-        {"Department": "Outward", "Activity": "Qty. picked-B2C", "Benchmark": 400},
-        {"Department": "Outward", "Activity": "QTY(Invoiced+Packed)B2C", "Benchmark": 450},
-        {"Department": "Outward", "Activity": "QTY.Manifest+Handover-B2C", "Benchmark": 1500},
-        {"Department": "Outward", "Activity": "Picked QTY. (B2B)", "Benchmark": 600},
-        {"Department": "Outward", "Activity": "QTY(Invoiced+Packed)B2B", "Benchmark": 800},
-        {"Department": "Return", "Activity": "RTO Received QTY. (B2B/B2C)", "Benchmark": 1000},
-        {"Department": "Return", "Activity": "RTO Good processing return", "Benchmark": 200},
-        {"Department": "Return", "Activity": "Bad processing with claim", "Benchmark": 60},
-        {"Department": "Return", "Activity": "RTO Putway QTY.", "Benchmark": 1200},
-        {"Department": "Return", "Activity": "Qty. GP Creation QCR", "Benchmark": 1000},
-        {"Department": "Other Activities", "Activity": "", "Benchmark": 0},
-    ]
-
+        {"Department": "Inward", "Activity": "Unloading_Loading_Boxes", "Benchmark": 150},
+        {"Department": "Inward", "Activity": "Receipt_Process_Boxes", "Benchmark": 150},
+        {"Department": "Inward", "Activity": "Qty_Grn_Qc", "Benchmark": 1100},
+        {"Department": "Inventory", "Activity": "Qty_Good_Putaway", "Benchmark": 1500},
+        {"Department": "Inventory", "Activity": "Qty_Cycle_Count", "Benchmark": 2000},
+        {"Department": "Inventory", "Activity": "Stn_Direct_Putaway", "Benchmark": 1500},
+        {"Department": "Outward", "Activity": "Qty_Picked_B2C", "Benchmark": 400},
+        {"Department": "Outward", "Activity": "Qty_Invoiced_Packed_B2C", "Benchmark": 450},
+        {"Department": "Outward", "Activity": "Qty_Manifest_Handover_B2C", "Benchmark": 1500},
+        {"Department": "Outward", "Activity": "Picked_Qty_B2B", "Benchmark": 600},
+        {"Department": "Outward", "Activity": "Qty_Invoiced_Packed_B2B", "Benchmark": 800},
+        {"Department": "Return", "Activity": "Rto_Received_Qty", "Benchmark": 1000},
+        {"Department": "Return", "Activity": "Rto_Good_Processing_Return", "Benchmark": 200},
+        {"Department": "Return", "Activity": "Rto_Putaway_Qty", "Benchmark": 1200},
+        {"Department": "Return", "Activity": "Qty_Gp_Creation_Qcr", "Benchmark": 1000},
+        {"Department": "Return", "Activity": "Bad_Processing_With_Claim", "Benchmark": 60},
+    ]  # keep your benchmark list as-is
     benchmarks_df = pd.DataFrame(benchmark_data)
-    # print(benchmarks_df)
+    df_cols = df.columns.tolist()
 
-
-    # Manpower and Execution Calculations
     benchmarks_df['Deployed Manpower'] = benchmarks_df['Activity'].apply(
-        lambda activity: df.get(f"{activity} Manpower_opening", pd.Series(dtype='float64')).sum()
-    ).round(2)  # 2 decimal places tak round karna
-
+        lambda activity: df[f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in df_cols else 0
+    )
     benchmarks_df['Target'] = benchmarks_df['Activity'].apply(
-        lambda activity: df.get(f"{activity}_opening", pd.Series()).sum()
+        lambda activity: df[f"{activity}_opening"].sum() if f"{activity}_opening" in df_cols else 0
     )
 
-    pendency_fields = [
-        "GRN Qty_pendency", "STN Qty_pendency", "Putaway Cancel Qty_pendency", "Putaway Return Qty_pendency",
-        "GRN Sellable Qty_pendency", "Bin Movement_pendency", "Return_pendency", "RTV_pendency",
-        "Channel Order Qty (B2C)_pendency", "RTS Order Qty (B2C)_pendency", "Breached Qty_pendency",
-        "Side Lined_pendency", "Dispatch Not Marked", "Not Dispatched Orders"
-    ]
-
+    pendency_fields = ['Grn_Qty_Pendency',	'Stn_Qty_Pendency',	'Putaway_Cancel_Qty_Pendency',	'Putaway_Return_Qty_Pendency',	'Grn_Sellable_Qty_Pendency',	'Bin_Movement_Pendency'
+                       'Return_Pendency',	'Rtv_Pendency',	'Channel_Order_Qty_B2C_Pendency',	'Rts_Order_Qty_B2C_Pendency',	'Breached_Qty_Pendency',	'Side_Lined_Pendency',	'Dispatch_Not_Marked',	'Not_Dispatched_Orders']  # keep your list same
     for field in pendency_fields:
-        field_name = f"{field}_opening"
-        benchmarks_df['Target'] += df.get(field_name, pd.Series()).sum()
+        col = f"{field}_opening"
+        if col in df_cols:
+            benchmarks_df['Target'] += df[col].sum()
 
-    # Required Manpower Calculation
-    benchmarks_df['Required Manpower'] = (benchmarks_df['Target'] / benchmarks_df['Benchmark']).round(2)
-    benchmarks_df['Extra Manpower'] = benchmarks_df['Deployed Manpower'] - benchmarks_df['Required Manpower'].round(2)
+    benchmarks_df['Required Manpower'] = (benchmarks_df['Target'] / benchmarks_df['Benchmark']).replace(
+        [np.inf, -np.inf], 0).fillna(0).round(2)
+    benchmarks_df['Extra Manpower'] = (benchmarks_df['Deployed Manpower'] - benchmarks_df['Required Manpower']).round(2)
 
     benchmarks_df['Execution'] = benchmarks_df['Activity'].apply(
-        lambda activity: df.get(f"{activity}_closing", pd.Series()).sum()
+        lambda activity: df[f"{activity}_closing"].sum() if f"{activity}_closing" in df_cols else 0
     )
-    benchmarks_df['Pendency'] = benchmarks_df['Target'] - benchmarks_df['Execution']
-
-    benchmarks_df['Capacity'] = benchmarks_df['Deployed Manpower'] * benchmarks_df['Benchmark']
+    benchmarks_df['Pendency'] = (benchmarks_df['Target'] - benchmarks_df['Execution']).round(2)
+    benchmarks_df['Capacity'] = (benchmarks_df['Deployed Manpower'] * benchmarks_df['Benchmark']).round(2)
 
     benchmarks_df['Capacity Vs Execution'] = benchmarks_df.apply(
-        lambda row: f"{(row['Execution'] / row['Capacity'] * 100) if row['Capacity'] > 0 else 0:.2f}%", axis=1
+        lambda row: f"{(row['Execution'] / row['Capacity'] * 100):.2f}%" if row['Capacity'] > 0 else "0.00%", axis=1
     )
-
     benchmarks_df['Target Vs Execution'] = benchmarks_df.apply(
-        lambda row: f"{(row['Execution'] / row['Target'] * 100) if row['Target'] > 0 else 0:.2f}%", axis=1
+        lambda row: f"{(row['Execution'] / row['Target'] * 100):.2f}%" if row['Target'] > 0 else "0.00%", axis=1
     )
 
-    table_data_list = benchmarks_df.to_dict(orient='records')
+    # 🔁 Merge with master
+    table_data_df = benchmarks_df.merge(master_file, on="Activity", how="left")
+    table_data_df.rename(columns={'Department_x': 'Department', 'Benchmark_x': 'Benchmark'}, inplace=True)
 
-    # SECOND MERGE: Merge table_data_list AGAIN with master file
-    table_data_df = pd.DataFrame(table_data_list)  # Convert to DataFrame
-    table_data_df = table_data_df.merge(master_file, on="Activity", how="left")  # Second merge
-
-    # Rename Columns
-    table_data_df.rename(columns={
-        'Department_x': 'Department',
-        'Benchmark_x': 'Benchmark',
-        'Planned Load': 'Planned Load',
-        'Head Count': 'Head Count'
-    }, inplace=True)
-    # Reorder Columns
     column_order = [
-        'Department', 'Activity', 'Benchmark', 'Head Count', 'Planned Load', 'Pendency','Deployed Manpower',
-        'Target', 'Required Manpower', 'Extra Manpower', 'Execution',
-        'Capacity','Capacity Vs Execution', 'Target Vs Execution']
-    table_data_df = table_data_df[column_order]  # Reordering
-
-    # Convert back to list after second merge
+        'Department', 'Activity', 'Benchmark', 'Head Count', 'Planned Load', 'Pendency',
+        'Deployed Manpower', 'Target', 'Required Manpower', 'Extra Manpower',
+        'Execution', 'Capacity', 'Capacity Vs Execution', 'Target Vs Execution'
+    ]
+    table_data_df = table_data_df[column_order]
     final_table_data = table_data_df.to_dict(orient='records')
-
-    # Store merged data for download
     session['table_data_list'] = final_table_data
 
-    return render_template("dwm_dashboard_ai.html", table_data=final_table_data,
-                           unique_dates=df["Date"].unique().tolist(),
+    # ✅ Pendency Modal Logic
+    pendency_data = []
+    if current_date:
+        df['Date'] = pd.to_datetime(df['Date'])
+        current_date_dt = pd.to_datetime(current_date)
+        previous_date = (current_date_dt - pd.Timedelta(days=1)).strftime('%Y-%m-%d')
+        df_today = df[df['Date'] == current_date_dt]
+        df_yesterday = df[df['Date'] == pd.to_datetime(previous_date)]
+
+        common_cols = [col.replace("_opening", "") for col in df.columns if col.endswith("_opening")]
+        for col in common_cols:
+            today_val = df_today[f"{col}_opening"].sum() if f"{col}_opening" in df_today else 0
+            yesterday_val = df_yesterday[f"{col}_closing"].sum() if f"{col}_closing" in df_yesterday else 0
+            pendency_data.append({
+                "Metric": col.replace("_", " ").title(),
+                "Yesterday_Closing": int(yesterday_val),
+                "Today_Opening": int(today_val),
+                "Difference": int(today_val - yesterday_val)
+            })
+
+    # ✅ Predicted Manpower Logic
+    predicted_data = []
+    for _, row in benchmarks_df.iterrows():
+        predicted_data.append({
+            "Activity": row["Activity"],
+            "Target": row["Target"],
+            "Benchmark": row["Benchmark"],
+            "Predicted Manpower": row["Required Manpower"]
+        })
+
+    return render_template("dwm_dashboard_ai.html",
+                           table_data=final_table_data,
+                           unique_dates=df["Date"].dt.strftime('%Y-%m-%d').unique().tolist(),
                            unique_shifts=df["Shift"].unique().tolist(),
                            unique_locations=df["Location"].unique().tolist(),
                            unique_customers=df["Customer"].unique().tolist(),
-                           selected_date=current_date, selected_shift=current_shift,
-                           selected_location=current_location, selected_customer=current_customer)
+                           selected_date=current_date,
+                           selected_shift=current_shift,
+                           selected_location=current_location,
+                           selected_customer=current_customer,
+                           raw_data=df.to_dict(orient="records"),
+                           pendency_data=pendency_data,
+                           predicted_data=predicted_data)
 
 
 @app.route("/download")
 def download_report():
     df = pd.DataFrame(session.get('table_data_list', []))
-
     if df.empty:
         return "No data to download"
-
     output = io.BytesIO()
     df.to_csv(output, index=False)
     output.seek(0)
     return send_file(output, mimetype="text/csv", as_attachment=True, download_name="DWM_Report.csv")
 
+
+@app.route('/dwm_report/upload_master', methods=['GET', 'POST'])
+def upload_master():
+    if request.method == 'POST':
+        file = request.files.get('master_file')
+        if file:
+            file.save(os.path.join(BASE_DIR, "master_data.csv"))
+            flash("✅ Master file uploaded successfully!", "success")
+            return redirect(url_for('dwm_dashboard_ai'))
+        else:
+            flash("❌ No file selected!", "danger")
+    return render_template("upload_master.html")
 
 
 # SLA Report Route
