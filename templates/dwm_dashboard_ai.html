@@ -81,6 +81,55 @@
         <a href="{{ url_for('upload_master') }}" class="btn btn-info text-white">📁 Upload Master File</a>
     </div>
 
+
+    {% if total_opening_pendency or total_closing_pendency %}
+    <div class="row mt-4">
+        <!-- Total Opening Pendency -->
+        <div class="col-md-4">
+            <div class="alert alert-warning shadow-sm border-0 d-flex justify-content-between align-items-center rounded-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-hourglass-split fs-3 me-3 text-dark"></i>
+                    <div>
+                        <h5 class="mb-0 fw-semibold">Total Opening Pendency</h5>
+                        <small class="text-muted">Sum of all *_opening pendency fields</small>
+                    </div>
+                </div>
+                <span class="fs-3 fw-bold text-danger">{{ total_opening_pendency }}</span>
+            </div>
+        </div>
+
+        <!-- Total Closing Pendency -->
+        <div class="col-md-4">
+            <div class="alert alert-info shadow-sm border-0 d-flex justify-content-between align-items-center rounded-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-hourglass fs-3 me-3 text-dark"></i>
+                    <div>
+                        <h5 class="mb-0 fw-semibold">Total Closing Pendency</h5>
+                        <small class="text-muted">Sum of all *_closing pendency fields</small>
+                    </div>
+                </div>
+                <span class="fs-3 fw-bold text-primary">{{ total_closing_pendency }}</span>
+            </div>
+        </div>
+
+        <!-- Total Opening + Target -->
+        <div class="col-md-4">
+            <div class="alert alert-success shadow-sm border-0 d-flex justify-content-between align-items-center rounded-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-plus-square fs-3 me-3 text-dark"></i>
+                    <div>
+                        <h5 class="mb-0 fw-semibold">Opening Pendency + Target</h5>
+                        <small class="text-muted">Opening Pendency + Today's Target</small>
+                    </div>
+                </div>
+                <span class="fs-3 fw-bold text-success">{{ total_opening_plus_target }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+
     <!-- Benchmark Table -->
     <div class="table-responsive mt-4">
         <table class="table table-bordered table-striped table-hover">
@@ -91,7 +140,6 @@
                 <th>Benchmark</th>
                 <th>Head Count</th>
                 <th>Planned Load</th>
-                <th>Pendency</th>
                 <th>Deployed MP</th>
                 <th>Target</th>
                 <th>Required MP</th>
@@ -104,23 +152,39 @@
             </thead>
             <tbody>
             {% for row in table_data %}
-                <tr>
-                    <td>{{ row['Department'] }}</td>
-                    <td>{{ row['Activity'] }}</td>
-                    <td>{{ row['Benchmark'] }}</td>
-                    <td>{{ row['Head Count'] }}</td>
-                    <td>{{ row['Planned Load'] }}</td>
-                    <td>{{ row['Pendency'] }}</td>
-                    <td>{{ row['Deployed Manpower'] }}</td>
-                    <td>{{ row['Target'] }}</td>
-                    <td>{{ row['Required Manpower'] }}</td>
-                    <td>{{ row['Extra Manpower'] }}</td>
-                    <td>{{ row['Execution'] }}</td>
-                    <td>{{ row['Capacity'] }}</td>
-                    <td>{{ row['Capacity Vs Execution'] }}</td>
-                    <td>{{ row['Target Vs Execution'] }}</td>
-                </tr>
+            <tr>
+                <td>{{ row['Department'] }}</td>
+                <td>{{ row['Activity'] }}</td>
+                <td>{{ row['Benchmark'] }}</td>
+                <td>{{ row['Head Count'] }}</td>
+                <td>{{ row['Planned Load'] }}</td>
+                <td>{{ row['Deployed Manpower'] }}</td>
+                <td>{{ row['Target'] }}</td>
+                <td>{{ row['Required Manpower'] }}</td>
+                <td>{{ row['Extra Manpower'] }}</td>
+                <td>{{ row['Execution'] }}</td>
+                <td>{{ row['Capacity'] }}</td>
+                <td>{{ row['Capacity Vs Execution'] }}</td>
+                <td>{{ row['Target Vs Execution'] }}</td>
+            </tr>
             {% endfor %}
+
+            <!-- 🔢 TOTAL ROW -->
+            <tr class="table-warning fw-bold">
+                <td>{{ totals['Department'] }}</td>
+                <td>{{ totals['Activity'] }}</td>
+                <td>{{ totals['Benchmark'] }}</td>
+                <td>{{ totals['Head Count'] }}</td>
+                <td>{{ totals['Planned Load'] }}</td>
+                <td>{{ totals['Deployed Manpower'] }}</td>
+                <td>{{ totals['Target'] }}</td>
+                <td>{{ totals['Required Manpower'] }}</td>
+                <td>{{ totals['Extra Manpower'] }}</td>
+                <td>{{ totals['Execution'] }}</td>
+                <td>{{ totals['Capacity'] }}</td>
+                <td>{{ totals['Capacity Vs Execution'] }}</td>
+                <td>{{ totals['Target Vs Execution'] }}</td>
+            </tr>
             </tbody>
         </table>
     </div>
