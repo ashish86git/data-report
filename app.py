@@ -377,10 +377,10 @@ def dwm_dashboard_ai():
 
     pendency_fields = ['Grn_Qty_Pendency',	'Stn_Qty_Pendency',	'Putaway_Cancel_Qty_Pendency',	'Putaway_Return_Qty_Pendency',	'Grn_Sellable_Qty_Pendency',	'Bin_Movement_Pendency'
                        'Return_Pendency',	'Rtv_Pendency',	'Channel_Order_Qty_B2C_Pendency',	'Rts_Order_Qty_B2C_Pendency',	'Breached_Qty_Pendency',	'Side_Lined_Pendency',	'Dispatch_Not_Marked',	'Not_Dispatched_Orders']  # keep your list same
-    for field in pendency_fields:
-        col = f"{field}_opening"
-        if col in df_cols:
-            benchmarks_df['Target'] += df[col].sum()
+    # for field in pendency_fields:
+    #     col = f"{field}_opening"
+    #     if col in df_cols:
+    #         benchmarks_df['Target'] += df[col].sum()
 
     benchmarks_df['Required Manpower'] = (benchmarks_df['Target'] / benchmarks_df['Benchmark']).replace(
         [np.inf, -np.inf], 0).fillna(0).round(2)
@@ -389,7 +389,7 @@ def dwm_dashboard_ai():
     benchmarks_df['Execution'] = benchmarks_df['Activity'].apply(
         lambda activity: df[f"{activity}_closing"].sum() if f"{activity}_closing" in df_cols else 0
     )
-    benchmarks_df['Pendency'] = (benchmarks_df['Target'] - benchmarks_df['Execution']).round(2)
+    # benchmarks_df['Pendency'] = (benchmarks_df['Target'] - benchmarks_df['Execution']).round(2)
     benchmarks_df['Capacity'] = (benchmarks_df['Deployed Manpower'] * benchmarks_df['Benchmark']).round(2)
 
     benchmarks_df['Capacity Vs Execution'] = benchmarks_df.apply(
@@ -403,8 +403,49 @@ def dwm_dashboard_ai():
     table_data_df = benchmarks_df.merge(master_file, on="Activity", how="left")
     table_data_df.rename(columns={'Department_x': 'Department', 'Benchmark_x': 'Benchmark'}, inplace=True)
 
+    # ✅ Define numeric columns for totaling
+    numeric_columns = [
+        'Head Count', 'Planned Load', 'Deployed Manpower',
+        'Target', 'Required Manpower', 'Extra Manpower',
+        'Execution', 'Capacity'
+    ]
+
+    # ✅ Calculate totals
+    totals = {}
+    for col in numeric_columns:
+        totals[col] = table_data_df[col].sum().round(2)
+
+    # Fill non-numeric display columns
+    totals['Department'] = 'Total'
+    totals['Activity'] = ''
+    totals['Benchmark'] = ''
+
+    # For percentage fields, calculate weighted average or show blank
+    totals['Capacity Vs Execution'] = ''
+    totals['Target Vs Execution'] = ''
+
+    # Total Opening & Closing Pendency
+    total_opening_pendency = 0
+    total_closing_pendency = 0
+
+    for field in pendency_fields:
+        opening_col = f"{field}_opening"
+        closing_col = f"{field}_closing"
+
+        if opening_col in df_cols:
+            total_opening_pendency += df[opening_col].sum()
+
+        if closing_col in df_cols:
+            total_closing_pendency += df[closing_col].sum()
+
+    # ✅ Total Target from benchmarks_df
+    total_target = benchmarks_df['Target'].sum()
+
+    # ✅ Opening + Target
+    total_opening_plus_target = total_opening_pendency + total_target
+
     column_order = [
-        'Department', 'Activity', 'Benchmark', 'Head Count', 'Planned Load', 'Pendency',
+        'Department', 'Activity', 'Benchmark', 'Head Count', 'Planned Load',
         'Deployed Manpower', 'Target', 'Required Manpower', 'Extra Manpower',
         'Execution', 'Capacity', 'Capacity Vs Execution', 'Target Vs Execution'
     ]
@@ -444,6 +485,7 @@ def dwm_dashboard_ai():
 
     return render_template("dwm_dashboard_ai.html",
                            table_data=final_table_data,
+                           totals=totals,
                            unique_dates=df["Date"].dt.strftime('%Y-%m-%d').unique().tolist(),
                            unique_shifts=df["Shift"].unique().tolist(),
                            unique_locations=df["Location"].unique().tolist(),
@@ -454,7 +496,12 @@ def dwm_dashboard_ai():
                            selected_customer=current_customer,
                            raw_data=df.to_dict(orient="records"),
                            pendency_data=pendency_data,
-                           predicted_data=predicted_data)
+                           predicted_data=predicted_data,
+                           total_opening_pendency=int(total_opening_pendency),
+                           total_closing_pendency=int(total_closing_pendency),
+                           total_target=int(total_target),
+                           total_opening_plus_target=int(total_opening_plus_target)
+                           )
 
 
 @app.route("/download")
