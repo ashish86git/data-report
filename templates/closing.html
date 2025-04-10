@@ -196,7 +196,7 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="location">Location</label>
-                    <select id="location" name="Location" required>
+                    <select id="location" name="location" required>
                         <option value="" disabled selected>Select Location</option>
                         <option value="Gurgaon">Gurgaon</option>
                         <option value="Hyderabad">Hyderabad</option>
@@ -204,12 +204,12 @@
                         <option value="Surat">Surat</option>
                         <option value="Alwar">Alwar</option>
                         <option value="Lucknow">Lucknow</option>
-                        <option value="Lucknow">Lucknow</option>
+<!--                        <option value="Lucknow">Lucknow</option>-->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="customer">Customer</label>
-                    <select id="customer" name="Customer" required>
+                    <select id="customer" name="customer" required>
                         <option value="" disabled selected>Select Customer</option>
                         <option value="Eshop Box">Eshop Box</option>
                         <option value="Kothari">Kothari</option>
@@ -227,15 +227,15 @@
               <div class="grid-3">
                 <div class="form-group">
                   <label for="id">Employee ID</label>
-                  <input type="text" id="id" name="ID" placeholder="Enter Emp ID" required>
+                  <input type="text" id="id" name="employee_id" placeholder="Enter Emp ID" required>
                 </div>
                 <div class="form-group">
                   <label for="email">Employee Email</label>
-                  <input type="email" id="email" name="Email" placeholder="Enter Email" required>
+                  <input type="email" id="email" name="email" placeholder="Enter Email" required>
                 </div>
                 <div class="form-group">
                   <label for="name">Employee Name</label>
-                  <input type="text" id="name" name="Name" placeholder="Enter Name" required>
+                  <input type="text" id="name" name="name" placeholder="Enter Name" required>
                 </div>
               </div>
 
@@ -243,15 +243,15 @@
               <div class="grid-3">
                   <div class="form-group">
                     <label for="start_time">Start Time</label>
-                    <input type="datetime-local" id="start_time" name="Start Time" required>
+                    <input type="datetime-local" id="start_time" name="start_time" required>
                   </div>
                   <div class="form-group">
                     <label for="completion_time">Completion Time</label>
-                    <input type="datetime-local" id="completion_time" name="Completion Time" required>
+                    <input type="datetime-local" id="completion_time" name="completion_time" required>
                   </div>
                   <div class="form-group">
                     <label for="date">Date</label>
-                    <input type="date" id="date" name="Date" required>
+                    <input type="date" id="date" name="date" required>
                   </div>
               </div>
 
@@ -259,7 +259,7 @@
             <div class="grid-3">
               <div class="form-group">
                 <label for="shift_type">Shift</label>
-                <select id="shift_type" name="Shift" required>
+                <select id="shift_type" name="shift" required>
                   <option value="" disabled selected>Select Shift</option>
                   <option value="morning">Morning</option>
                   <option value="afternoon">Afternoon</option>
@@ -280,20 +280,20 @@
             <div id="pendency-form" style="display: none;">
               <h3>Pendency Details</h3>
               <div class="pendency-grid">
-                <div class="form-group"><label>GRN Qty Pendency:</label><input type="number" name="grn_qty"></div>
-                <div class="form-group"><label>STN Qty Pendency:</label><input type="number" name="stn_qty"></div>
-                <div class="form-group"><label>Putaway Cancel Qty Pendency:</label><input type="number" name="putaway_cancel"></div>
-                <div class="form-group"><label>Putaway Return Qty Pendency:</label><input type="number" name="putaway_return"></div>
-                <div class="form-group"><label>GRN Sellable Qty Pendency:</label><input type="number" name="grn_sellable"></div>
-                <div class="form-group"><label>Bin Movement Pendency:</label><input type="number" name="bin_movement"></div>
+                <div class="form-group"><label>GRN Qty Pendency:</label><input type="number" name="grn_qty_pendency"></div>
+                <div class="form-group"><label>STN Qty Pendency:</label><input type="number" name="stn_qty_pendency"></div>
+                <div class="form-group"><label>Putaway Cancel Qty Pendency:</label><input type="number" name="putaway_cancel_qty_pendency"></div>
+                <div class="form-group"><label>Putaway Return Qty Pendency:</label><input type="number" name="putaway_return_qty_pendency"></div>
+                <div class="form-group"><label>GRN Sellable Qty Pendency:</label><input type="number" name="grn_sellable_qty_pendency"></div>
+                <div class="form-group"><label>Bin Movement Pendency:</label><input type="number" name="bin_movement_pendency"></div>
                 <div class="form-group"><label>Return Pendency:</label><input type="number" name="return_pendency"></div>
                 <div class="form-group"><label>RTV Pendency:</label><input type="number" name="rtv_pendency"></div>
-                <div class="form-group"><label>Channel Order Qty (B2C) Pendency:</label><input type="number" name="channel_order"></div>
-                <div class="form-group"><label>RTS Order Qty (B2C) Pendency:</label><input type="number" name="rts_order"></div>
-                <div class="form-group"><label>Breached Qty Pendency:</label><input type="number" name="breached_qty"></div>
-                <div class="form-group"><label>Side Lined Pendency:</label><input type="number" name="side_lined"></div>
+                <div class="form-group"><label>Channel Order Qty (B2C) Pendency:</label><input type="number" name="channel_order_qty_b2c_pendency"></div>
+                <div class="form-group"><label>RTS Order Qty (B2C) Pendency:</label><input type="number" name="rts_order_qty_b2c_pendency"></div>
+                <div class="form-group"><label>Breached Qty Pendency:</label><input type="number" name="breached_qty_pendency"></div>
+                <div class="form-group"><label>Side Lined Pendency:</label><input type="number" name="side_lined_pendency"></div>
                 <div class="form-group"><label>Dispatch Not Marked:</label><input type="number" name="dispatch_not_marked"></div>
-                <div class="form-group"><label>Not Dispatched Orders:</label><input type="number" name="not_dispatched"></div>
+                <div class="form-group"><label>Not Dispatched Orders:</label><input type="number" name="not_dispatched_orders"></div>
               </div>
             </div>
 
@@ -303,19 +303,19 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="dwm_conducted_by_name">DWM Conducted By</label>
-                    <input type="text" id="dwm_conducted_by_name" name="DWM Conducted By" placeholder="Enter Name">
+                    <input type="text" id="dwm_conducted_by_name" name="dwm_conducted_by" placeholder="Enter Name">
                 </div>
                 <div class="form-group">
                     <label for="inward_name">Inward Name</label>
-                    <input type="text" id="inward_name" name="Inward Name" placeholder="Enter Inward Name">
+                    <input type="text" id="inward_name" name="inward_name" placeholder="Enter Inward Name">
                 </div>
                 <div class="form-group">
                     <label for="inventory_name">Inventory Name</label>
-                    <input type="text" id="inventory_name" name="Inventory Name" placeholder="Enter Inventory Name">
+                    <input type="text" id="inventory_name" name="inventory_name" placeholder="Enter Inventory Name">
                 </div>
                 <div class="form-group">
                     <label for="outward_name">Outward Name</label>
-                    <input type="text" id="outward_name" name="Outward Name" placeholder="Enter Outward Name">
+                    <input type="text" id="outward_name" name="outward_name" placeholder="Enter Outward Name">
                 </div>
             </div>
             <div class="grid">
@@ -324,19 +324,19 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="return_name">Return Name:</label>
-                    <input type="text" id="return_name" name="Return Name" placeholder="Return Name">
+                    <input type="text" id="return_name" name="return_name" placeholder="Return Name">
                 </div>
                 <div class="form-group">
                     <label for="claim_name">Claim Name:</label>
-                    <input type="text" id="claim_name" name="Claim Name" placeholder="Claim Name">
+                    <input type="text" id="claim_name" name="claim_name" placeholder="Claim Name">
                 </div>
                 <div class="form-group">
                     <label for="gp_name">GP Name:</label>
-                    <input type="text" id="gp_name" name="GP Name" placeholder="GP Name">
+                    <input type="text" id="gp_name" name="gp_name" placeholder="GP Name">
                 </div>
                 <div class="form-group">
                     <label for="no_of_floor_associated">No of Floor Associated:</label>
-                    <input type="number" id="no_of_floor_associated" name="No of Floor Associated" placeholder="No of Floor Associated">
+                    <input type="number" id="no_of_floor_associated" name="no_of_floor_associated" placeholder="No of Floor Associated">
                 </div>
             </div>
 
@@ -345,66 +345,66 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="unloading_boxes">Unloading / Loading Boxes:</label>
-                    <input type="number" id="unloading_boxes" name="Unloading / Loading Boxes" placeholder="Unloading / Loading Boxes">
+                    <input type="number" id="unloading_boxes" name="unloading_loading_boxes" placeholder="Unloading / Loading Boxes">
                 </div>
                 <div class="form-group">
                     <label for="unloading_loading_boxes_manpower">Unloading / Loading Boxes Manpower:</label>
-                    <input type="number" id="unloading_loading_boxes_manpower" name="Unloading / Loading Boxes Manpower" placeholder="Unloading / Loading Boxes Manpower">
+                    <input type="number" id="unloading_loading_boxes_manpower" name="unloading_loading_boxes_manpower" placeholder="Unloading / Loading Boxes Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="receipt_process_wms">Receipt Process in WMS (Boxes):</label>
-                    <input type="number" id="receipt_process_wms" name="Receipt Process in WMS (Boxes)" placeholder="Receipt Process in WMS (Boxes)">
+                    <input type="number" id="receipt_process_wms" name="receipt_process_boxes" placeholder="Receipt Process in WMS (Boxes)">
                 </div>
                 <div class="form-group">
                     <label for="receipt_process_wms_manpower">Receipt Process in WMS (Boxes) Manpower:</label>
-                    <input type="number" id="receipt_process_wms_manpower" name="Receipt Process in WMS (Boxes) Manpower" placeholder="Receipt Process in WMS (Boxes) Manpower">
+                    <input type="number" id="receipt_process_wms_manpower" name="receipt_process_boxes_manpower" placeholder="Receipt Process in WMS (Boxes) Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="grn_qc">Qty. GRN & QC:</label>
-                    <input type="number" id="grn_qc" name="Qty. GRN & QC" placeholder="GRN & QC">
+                    <input type="number" id="grn_qc" name="qty_grn_qc" placeholder="GRN & QC">
                 </div>
                 <div class="form-group">
                     <label for="grn_qc_manpower">GRN & QC Manpower:</label>
-                    <input type="number" id="grn_qc_manpower" name="Qty. GRN & QC Manpower" placeholder="GRN & QC Manpower">
+                    <input type="number" id="grn_qc_manpower" name="qty_grn_qc_manpower" placeholder="GRN & QC Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="putaway">Qty- Good Putaway:</label>
-                    <input type="number" id="putaway" name="Qty- Good Putaway" placeholder="Putaway">
+                    <input type="number" id="putaway" name="qty_good_putaway" placeholder="Putaway">
                 </div>
                 <div class="form-group">
                     <label for="putaway_manpower">Good Putaway Manpower:</label>
-                    <input type="number" id="putaway_manpower" name="Qty- Good Putaway Manpower" placeholder="Good Putaway Manpower">
+                    <input type="number" id="putaway_manpower" name="qty_good_putaway_manpower" placeholder="Good Putaway Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="cycle_count">Qty- Cycle Count/Consolidation:</label>
-                    <input type="number" id="cycle_count" name="Qty- Cycle Count/Consolidation" placeholder="Cycle Count">
+                    <input type="number" id="cycle_count" name="qty_cycle_count" placeholder="Cycle Count">
                 </div>
                 <div class="form-group">
                     <label for="cycle_count_manpower">Cycle Count/Consolidation Manpower:</label>
-                    <input type="number" id="cycle_count_manpower" name="Qty- Cycle Count/Consolidation Manpower" placeholder="Cycle Count/Consolidation Manpower">
+                    <input type="number" id="cycle_count_manpower" name="qty_cycle_count_manpower" placeholder="Cycle Count/Consolidation Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="stn_direct_putaway">STN-Direct Putaway:</label>
-                    <input type="number" id="stn_direct_putaway" name="STN-Direct Putaway" placeholder="STN-Direct Putaway">
+                    <input type="number" id="stn_direct_putaway" name="stn_direct_putaway" placeholder="STN-Direct Putaway">
                 </div>
                 <div class="form-group">
                     <label for="stn_direct_putaway_manpower">STN-Direct Putaway Manpower:</label>
-                    <input type="number" id="stn_direct_putaway_manpower" name="STN-Direct Putaway Manpower" placeholder="STN-Direct Putaway Manpower">
+                    <input type="number" id="stn_direct_putaway_manpower" name="stn_direct_putaway_manpower" placeholder="STN-Direct Putaway Manpower">
                 </div>
             </div>
 
@@ -418,55 +418,55 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="picked_qty_b2c">Qty. picked-B2C:</label>
-                    <input type="number" id="picked_qty_b2c" name="Qty. picked-B2C" placeholder="Picked QTY. (B2C)">
+                    <input type="number" id="picked_qty_b2c" name="qty_picked_b2c" placeholder="Picked QTY. (B2C)">
                 </div>
                 <div class="form-group">
                     <label for="picked_qty_b2c_manpower">picked-B2C Manpower:</label>
-                    <input type="number" id="picked_qty_b2c_manpower" name="Qty. picked-B2C Manpower" placeholder="picked-B2C Manpower">
+                    <input type="number" id="picked_qty_b2c_manpower" name="qty_picked_b2c_manpower" placeholder="picked-B2C Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="qty_invoiced_packed_b2c">QTY(Invoiced+Packed)B2C:</label>
-                    <input type="number" id="qty_invoiced_packed_b2c" name="QTY(Invoiced+Packed)B2C" placeholder="QTY(Invoiced+Packed)B2C">
+                    <input type="number" id="qty_invoiced_packed_b2c" name="qty_invoiced_packed_b2c" placeholder="QTY(Invoiced+Packed)B2C">
                 </div>
                 <div class="form-group">
                     <label for="qty_invoiced_packed_b2c_manpower">(Invoiced+Packed)B2C Manpower:</label>
-                    <input type="number" id="qty_invoiced_packed_b2c_manpower" name="QTY(Invoiced+Packed)B2C Manpower" placeholder="(Invoiced+Packed)B2C Manpower">
+                    <input type="number" id="qty_invoiced_packed_b2c_manpower" name="qty_invoiced_packed_b2c_manpower" placeholder="(Invoiced+Packed)B2C Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="qty_manifest_handover_b2c">QTY.Manifest+Handover-B2C:</label>
-                    <input type="number" id="qty_manifest_handover_b2c" name="QTY.Manifest+Handover-B2C" placeholder="QTY.Manifest+Handover-B2C">
+                    <input type="number" id="qty_manifest_handover_b2c" name="qty_manifest_handover_b2c" placeholder="QTY.Manifest+Handover-B2C">
                 </div>
                 <div class="form-group">
                     <label for="qty_manifest_handover_b2c_manpower">Manifest+Handover-B2C Manpower:</label>
-                    <input type="number" id="qty_manifest_handover_b2c_manpower" name="QTY.Manifest+Handover-B2C Manpower" placeholder="Manifest+Handover-B2C Manpower">
+                    <input type="number" id="qty_manifest_handover_b2c_manpower" name="qty_manifest_handover_b2c_manpower" placeholder="Manifest+Handover-B2C Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="qty_invoiced_packed_b2b">QTY(Invoiced+Packed)B2B:</label>
-                    <input type="number" id="qty_invoiced_packed_b2b" name="QTY(Invoiced+Packed)B2B" placeholder="QTY(Invoiced+Packed)B2B">
+                    <input type="number" id="qty_invoiced_packed_b2b" name="qty_invoiced_packed_b2b" placeholder="QTY(Invoiced+Packed)B2B">
                 </div>
                 <div class="form-group">
                     <label for="qty_invoiced_packed_b2b_manpower">(Invoiced+Packed)B2B Manpower:</label>
-                    <input type="number" id="qty_invoiced_packed_b2b_manpower" name="QTY(Invoiced+Packed)B2B Manpower" placeholder="(Invoiced+Packed)B2B Manpower">
+                    <input type="number" id="qty_invoiced_packed_b2b_manpower" name="qty_invoiced_packed_b2b_manpower" placeholder="(Invoiced+Packed)B2B Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="picked_qty_b2b">Picked QTY. ( B2B ):</label>
-                    <input type="number" id="picked_qty_b2b" name="Picked QTY. ( B2B )" placeholder="Picked QTY. (B2B)">
+                    <input type="number" id="picked_qty_b2b" name="picked_qty_b2b" placeholder="Picked QTY. (B2B)">
                 </div>
                 <div class="form-group">
-                    <label for="picked_qty_b2b_manpower">Picked (B2B) Manpower:</label>
-                    <input type="number" id="picked_qty_b2b_manpower" name="Picked QTY. ( B2B ) Manpower" placeholder="Picked (B2B) Manpower">
+                    <label for="picked_qty_b2b_manpower">Picked QTY. ( B2B ) Manpower:</label>
+                    <input type="number" id="picked_qty_b2b_manpower" name="picked_qty_b2b_manpower" placeholder="Picked (B2B) Manpower">
                 </div>
             </div>
 
@@ -475,55 +475,55 @@
             <div class="grid">
                 <div class="form-group">
                     <label for="rto_received_qty_b2b_b2c">RTO Received QTY. (B2B/B2C):</label>
-                    <input type="number" id="rto_received_qty_b2b_b2c" name="RTO Received QTY. (B2B/B2C)" placeholder="RTO Received QTY.(B2B/B2C)">
+                    <input type="number" id="rto_received_qty_b2b_b2c" name="rto_received_qty" placeholder="RTO Received QTY.(B2B/B2C)">
                 </div>
                 <div class="form-group">
                     <label for="rto_received_qty_b2b_b2c_manpower">RTO Received (B2B/B2C) Manpower:</label>
-                    <input type="number" id="rto_received_qty_b2b_b2c_manpower" name="RTO Received QTY. (B2B/B2C) Manpower" placeholder="RTO Received (B2B/B2C) Manpower">
+                    <input type="number" id="rto_received_qty_b2b_b2c_manpower" name="rto_received_qty_manpower" placeholder="RTO Received (B2B/B2C) Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="rto_good_processing_return">RTO Good processing return:</label>
-                    <input type="number" id="rto_good_processing_return" name="RTO Good processing return" placeholder="RTO Good processing return">
+                    <input type="number" id="rto_good_processing_return" name="rto_good_processing_return" placeholder="RTO Good processing return">
                 </div>
                 <div class="form-group">
                     <label for="rto_good_processing_return_manpower">RTO Good processing return Manpower:</label>
-                    <input type="number" id="rto_good_processing_return_manpower" name="RTO Good processing return Manpower" placeholder="RTO Good processing return Manpower">
+                    <input type="number" id="rto_good_processing_return_manpower" name="rto_good_processing_return_manpower" placeholder="RTO Good processing return Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="bad_processing_with_claim">Bad processing with claim:</label>
-                    <input type="number" id="bad_processing_with_claim" name="Bad processing with claim" placeholder="Bad processing with claim">
+                    <input type="number" id="bad_processing_with_claim" name="bad_processing_with_claim" placeholder="Bad processing with claim">
                 </div>
                 <div class="form-group">
                     <label for="bad_processing_with_claim_manpower">Bad processing with claim Manpower:</label>
-                    <input type="number" id="bad_processing_with_claim_manpower" name="Bad processing with claim Manpower" placeholder="Bad processing with claim Manpower">
+                    <input type="number" id="bad_processing_with_claim_manpower" name="bad_processing_with_claim_manpower" placeholder="Bad processing with claim Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="qty_gp_creation_qcr">Qty. GP Creation QCR:</label>
-                    <input type="number" id="qty_gp_creation_qcr" name="Qty. GP Creation QCR" placeholder="Qty. GP Creation QCR">
+                    <input type="number" id="qty_gp_creation_qcr" name="qty_gp_creation_qcr" placeholder="Qty. GP Creation QCR">
                 </div>
                 <div class="form-group">
                     <label for="qty_gp_creation_qcr_manpower">GP Creation QCR Manpower:</label>
-                    <input type="number" id="qty_gp_creation_qcr_manpower" name="Qty. GP Creation QCR Manpower" placeholder="GP Creation QCR Manpower">
+                    <input type="number" id="qty_gp_creation_qcr_manpower" name="qty_gp_creation_qcr_manpower" placeholder="GP Creation QCR Manpower">
                 </div>
             </div>
 
             <div class="grid">
                 <div class="form-group">
                     <label for="rto_putaway">RTO Putaway:</label>
-                    <input type="number" id="rto_putaway" name="RTO Putaway" placeholder="RTO Putaway">
+                    <input type="number" id="rto_putaway" name="rto_putaway_qty" placeholder="RTO Putaway">
                 </div>
                 <div class="form-group">
                     <label for="rto_putaway_manpower">RTO Putaway Manpower:</label>
-                    <input type="number" id="rto_putaway_manpower" name="RTO Putaway Manpower" placeholder="RTO Putaway Manpower">
+                    <input type="number" id="rto_putaway_manpower" name="rto_putaway_qty_manpower" placeholder="RTO Putaway Manpower">
                 </div>
             </div>
 
@@ -533,7 +533,7 @@
             <!-- Notes -->
             <div class="full-width">
                 <label for="comments">Comments/Notes:</label>
-                <textarea id="comments" name="Comments/Notes" rows="5"></textarea>
+                <textarea id="comments" name="comments" rows="5"></textarea>
             </div>
 
 
