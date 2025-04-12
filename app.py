@@ -464,8 +464,18 @@ def dwm_dashboard_ai():
 
         common_cols = [col.replace("_opening", "") for col in df.columns if col.endswith("_opening")]
         for col in common_cols:
-            today_val = df_today[f"{col}_opening"].sum() if f"{col}_opening" in df_today else 0
-            yesterday_val = df_yesterday[f"{col}_closing"].sum() if f"{col}_closing" in df_yesterday else 0
+            # Only include selected pendency fields
+            if col not in pendency_fields:
+                continue
+
+            today_col = f"{col}_opening"
+            yesterday_col = f"{col}_closing"
+
+            # ✅ Convert to numeric safely
+            today_val = pd.to_numeric(df_today[today_col], errors='coerce').sum() if today_col in df_today else 0
+            yesterday_val = pd.to_numeric(df_yesterday[yesterday_col],
+                                          errors='coerce').sum() if yesterday_col in df_yesterday else 0
+
             pendency_data.append({
                 "Metric": col.replace("_", " ").title(),
                 "Yesterday_Closing": int(yesterday_val),
