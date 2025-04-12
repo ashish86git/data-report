@@ -128,6 +128,11 @@
     </div>
     {% endif %}
 
+    <!-- 🔍 Pendency Modal Trigger -->
+    <button class="btn btn-warning mt-4" data-bs-toggle="modal" data-bs-target="#pendencyModal">
+        View Pendency Details
+    </button>
+
 
 
     <!-- Benchmark Table -->
@@ -189,38 +194,39 @@
         </table>
     </div>
 
-    <!-- 🔍 Pendency Modal Trigger -->
-    <button class="btn btn-warning mt-4" data-bs-toggle="modal" data-bs-target="#pendencyModal">
-        View Pendency Details
-    </button>
+<!--    &lt;!&ndash; 🔍 Pendency Modal Trigger &ndash;&gt;-->
+<!--    <button class="btn btn-warning mt-4" data-bs-toggle="modal" data-bs-target="#pendencyModal">-->
+<!--        View Pendency Details-->
+<!--    </button>-->
 
-    <!-- 📦 Predicted Manpower Section -->
-    <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-info text-white">
-            🔮 Predicted Manpower Requirement
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm table-bordered">
-                    <thead class="table-light">
-                    <tr>
-                        <th>Activity</th>
-                        <th>Predicted Manpower</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for row in predicted_data %}
-                        <tr>
-                            <td>{{ row['Activity'] }}</td>
-                            <td>{{ row['Predicted Manpower'] }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<!--    &lt;!&ndash; 📦 Predicted Manpower Section &ndash;&gt;-->
+<!--    <div class="card mt-4 shadow-sm">-->
+<!--        <div class="card-header bg-info text-white">-->
+<!--            🔮 Predicted Manpower Requirement-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-sm table-bordered">-->
+<!--                    <thead class="table-light">-->
+<!--                    <tr>-->
+<!--                        <th>Activity</th>-->
+<!--                        <th>Predicted Manpower</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    {% for row in predicted_data %}-->
+<!--                        <tr>-->
+<!--                            <td>{{ row['Activity'] }}</td>-->
+<!--                            <td>{{ row['Predicted Manpower'] }}</td>-->
+<!--                        </tr>-->
+<!--                    {% endfor %}-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
+    <!-- 🧾 Pendency Modal -->
     <!-- 🧾 Pendency Modal -->
     <div class="modal fade" id="pendencyModal" tabindex="-1" aria-labelledby="pendencyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -232,20 +238,22 @@
                 <div class="modal-body">
                     <table class="table table-bordered table-striped table-hover table-sm">
                         <thead class="table-light">
-                        <tr>
-                            <th>Pendency Type</th>
-                            <th>Opening</th>
-                            <th>Closing</th>
-                        </tr>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Closing</th>
+                                <th>Opening</th>
+                                <th>Difference</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for row in pendency_data %}
+                            {% for row in pendency_data %}
                             <tr>
-                                <td>{{ row['Pendency Type'] }}</td>
-                                <td>{{ row['Opening'] }}</td>
-                                <td>{{ row['Closing'] }}</td>
+                                <td>{{ row['Metric'] }}</td>
+                                <td>{{ row['Yesterday_Closing'] }}</td>
+                                <td>{{ row['Today_Opening'] }}</td>
+                                <td>{{ row['Difference'] }}</td>
                             </tr>
-                        {% endfor %}
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -255,6 +263,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Toggle raw data -->
     <button class="btn btn-outline-dark mt-4 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#rawDataCollapse">
