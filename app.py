@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask import Flask, render_template, request, redirect, url_for, send_file, flash, render_template_string, session, \
     jsonify
 import datetime
+from decimal import Decimal, InvalidOperation
 from datetime import datetime
 from datetime import datetime, timedelta
 from datetime import datetime
@@ -119,26 +120,33 @@ def save_entry_to_csv(entry, filename):
 @app.route('/dwm_report/opening', methods=['GET', 'POST'])
 def opening():
     if request.method == 'POST':
+        # Define field types
         integer_fields = [
             'grn_qty_pendency', 'stn_qty_pendency', 'putaway_cancel_qty_pendency',
             'putaway_return_qty_pendency', 'grn_sellable_qty_pendency', 'bin_movement_pendency',
             'return_pendency', 'rtv_pendency', 'channel_order_qty_b2c_pendency',
             'rts_order_qty_b2c_pendency', 'breached_qty_pendency', 'side_lined_pendency',
             'dispatch_not_marked', 'not_dispatched_orders', 'no_of_floor_associated',
-            'unloading_loading_boxes', 'unloading_loading_boxes_manpower', 'receipt_process_boxes',
-            'receipt_process_boxes_manpower', 'qty_grn_qc', 'qty_grn_qc_manpower',
-            'qty_good_putaway', 'qty_good_putaway_manpower', 'qty_cycle_count',
-            'qty_cycle_count_manpower', 'stn_direct_putaway', 'stn_direct_putaway_manpower',
-            'qty_picked_b2c', 'qty_picked_b2c_manpower', 'qty_invoiced_packed_b2c',
-            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c',
-            'qty_manifest_handover_b2c_manpower', 'qty_invoiced_packed_b2b',
-            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b', 'picked_qty_b2b_manpower',
-            'rto_received_qty', 'rto_received_qty_manpower', 'rto_putaway_qty',
-            'rto_putaway_qty_manpower', 'qty_gp_creation_qcr', 'qty_gp_creation_qcr_manpower',
-            'rto_good_processing_return', 'rto_good_processing_return_manpower',
-            'bad_processing_with_claim', 'bad_processing_with_claim_manpower'
+            'unloading_loading_boxes', 'receipt_process_boxes', 'qty_grn_qc',
+            'qty_good_putaway', 'qty_cycle_count', 'stn_direct_putaway',
+            'qty_picked_b2c', 'qty_invoiced_packed_b2c', 'qty_manifest_handover_b2c',
+            'qty_invoiced_packed_b2b', 'picked_qty_b2b', 'rto_received_qty',
+            'rto_putaway_qty', 'qty_gp_creation_qcr', 'rto_good_processing_return',
+            'bad_processing_with_claim'
         ]
 
+        decimal_fields = [
+            'unloading_loading_boxes_manpower', 'receipt_process_boxes_manpower',
+            'qty_grn_qc_manpower', 'qty_good_putaway_manpower', 'qty_cycle_count_manpower',
+            'stn_direct_putaway_manpower', 'qty_picked_b2c_manpower',
+            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c_manpower',
+            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b_manpower',
+            'rto_received_qty_manpower', 'rto_putaway_qty_manpower',
+            'qty_gp_creation_qcr_manpower', 'rto_good_processing_return_manpower',
+            'bad_processing_with_claim_manpower'
+        ]
+
+        # Clean and parse data
         cleaned_data = {}
         for key in request.form:
             value = request.form[key].strip()
@@ -147,31 +155,55 @@ def opening():
                     cleaned_data[key] = int(value) if value != '' else None
                 except ValueError:
                     cleaned_data[key] = None
+            elif key in decimal_fields:
+                try:
+                    cleaned_data[key] = Decimal(value) if value != '' else None
+                except (ValueError, InvalidOperation):
+                    cleaned_data[key] = None
             else:
                 cleaned_data[key] = value if value != '' else None
 
-        # Add source and timestamp
+        # Add metadata
+        timestamp_now = datetime.now()
         cleaned_data['source'] = 'Opening'
-        cleaned_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cleaned_data['timestamp'] = timestamp_now.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Prepare query
-        columns = ', '.join(cleaned_data.keys())
-        placeholders = ', '.join(['%s'] * len(cleaned_data))
-        values = tuple(cleaned_data.values())
-        query = f"INSERT INTO opening_dwm ({columns}) VALUES ({placeholders})"
+        employee_id = cleaned_data.get('employee_id')
+        today_date = timestamp_now.date()
 
         try:
-            cur.execute(query, values)
+            # Check if already submitted today
+            check_query = """
+                SELECT timestamp FROM opening_dwm 
+                WHERE employee_id = %s AND DATE(timestamp) = %s
+                ORDER BY timestamp DESC LIMIT 1
+            """
+            cur.execute(check_query, (employee_id, today_date))
+            previous_submission = cur.fetchone()
+
+            if previous_submission:
+                last_submission_time = datetime.strptime(previous_submission[0], "%Y-%m-%d %H:%M:%S")
+                if (timestamp_now - last_submission_time) < timedelta(hours=8):
+                    message = "⚠️ You have already submitted the form today. You can submit again after 8 hours."
+                    return render_template("opening.html", message=message, alert_type="warning")
+
+            # Insert into DB
+            columns = ', '.join(cleaned_data.keys())
+            placeholders = ', '.join(['%s'] * len(cleaned_data))
+            values = tuple(cleaned_data.values())
+            insert_query = f"INSERT INTO opening_dwm ({columns}) VALUES ({placeholders})"
+
+            cur.execute(insert_query, values)
             conn.commit()
             message = "✅ Opening data submitted successfully!"
+            return render_template("opening.html", message=message, alert_type="success")
+
         except Exception as e:
             conn.rollback()
             message = f"❌ Error: {str(e)}"
-
-        return render_template("opening.html", message=message)
+            return render_template("opening.html", message=message, alert_type="danger")
 
     return render_template("opening.html")
-
 
 
 
@@ -184,18 +216,23 @@ def closing():
             'return_pendency', 'rtv_pendency', 'channel_order_qty_b2c_pendency',
             'rts_order_qty_b2c_pendency', 'breached_qty_pendency', 'side_lined_pendency',
             'dispatch_not_marked', 'not_dispatched_orders', 'no_of_floor_associated',
-            'unloading_loading_boxes', 'unloading_loading_boxes_manpower', 'receipt_process_boxes',
-            'receipt_process_boxes_manpower', 'qty_grn_qc', 'qty_grn_qc_manpower',
-            'qty_good_putaway', 'qty_good_putaway_manpower', 'qty_cycle_count',
-            'qty_cycle_count_manpower', 'stn_direct_putaway', 'stn_direct_putaway_manpower',
-            'qty_picked_b2c', 'qty_picked_b2c_manpower', 'qty_invoiced_packed_b2c',
-            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c',
-            'qty_manifest_handover_b2c_manpower', 'qty_invoiced_packed_b2b',
-            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b', 'picked_qty_b2b_manpower',
-            'rto_received_qty', 'rto_received_qty_manpower', 'rto_putaway_qty',
-            'rto_putaway_qty_manpower', 'qty_gp_creation_qcr', 'qty_gp_creation_qcr_manpower',
-            'rto_good_processing_return', 'rto_good_processing_return_manpower',
-            'bad_processing_with_claim', 'bad_processing_with_claim_manpower'
+            'unloading_loading_boxes', 'receipt_process_boxes', 'qty_grn_qc',
+            'qty_good_putaway', 'qty_cycle_count', 'stn_direct_putaway',
+            'qty_picked_b2c', 'qty_invoiced_packed_b2c', 'qty_manifest_handover_b2c',
+            'qty_invoiced_packed_b2b', 'picked_qty_b2b', 'rto_received_qty',
+            'rto_putaway_qty', 'qty_gp_creation_qcr', 'rto_good_processing_return',
+            'bad_processing_with_claim'
+        ]
+
+        decimal_fields = [
+            'unloading_loading_boxes_manpower', 'receipt_process_boxes_manpower',
+            'qty_grn_qc_manpower', 'qty_good_putaway_manpower', 'qty_cycle_count_manpower',
+            'stn_direct_putaway_manpower', 'qty_picked_b2c_manpower',
+            'qty_invoiced_packed_b2c_manpower', 'qty_manifest_handover_b2c_manpower',
+            'qty_invoiced_packed_b2b_manpower', 'picked_qty_b2b_manpower',
+            'rto_received_qty_manpower', 'rto_putaway_qty_manpower',
+            'qty_gp_creation_qcr_manpower', 'rto_good_processing_return_manpower',
+            'bad_processing_with_claim_manpower'
         ]
 
         cleaned_data = {}
@@ -206,26 +243,54 @@ def closing():
                     cleaned_data[key] = int(value) if value != '' else None
                 except ValueError:
                     cleaned_data[key] = None
+            elif key in decimal_fields:
+                try:
+                    cleaned_data[key] = Decimal(value) if value != '' else None
+                except (ValueError, InvalidOperation):
+                    cleaned_data[key] = None
             else:
                 cleaned_data[key] = value if value != '' else None
 
+        # Add source and timestamp
+        timestamp_now = datetime.now()
         cleaned_data['source'] = 'Closing'
-        cleaned_data['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cleaned_data['timestamp'] = timestamp_now.strftime("%Y-%m-%d %H:%M:%S")
+        print(cleaned_data)  # Debug: log final cleaned data
 
-        columns = ', '.join(cleaned_data.keys())
-        placeholders = ', '.join(['%s'] * len(cleaned_data))
-        values = tuple(cleaned_data.values())
-        query = f"INSERT INTO closing_dwm ({columns}) VALUES ({placeholders})"
+        employee_id = cleaned_data.get('employee_id')
+        today_date = timestamp_now.date()
 
         try:
+            # Check previous submission
+            check_query = """
+                SELECT timestamp FROM closing_dwm
+                WHERE employee_id = %s AND DATE(timestamp) = %s
+                ORDER BY timestamp DESC LIMIT 1
+            """
+            cur.execute(check_query, (employee_id, today_date))
+            previous_submission = cur.fetchone()
+
+            if previous_submission:
+                last_time = datetime.strptime(previous_submission[0], "%Y-%m-%d %H:%M:%S")
+                if (timestamp_now - last_time) < timedelta(hours=8):
+                    message = "⚠️ You have already submitted the form today. You can submit again after 8 hours."
+                    return render_template("closing.html", message=message, alert_type="warning")
+
+            # Insert data
+            columns = ', '.join(cleaned_data.keys())
+            placeholders = ', '.join(['%s'] * len(cleaned_data))
+            values = tuple(cleaned_data.values())
+            query = f"INSERT INTO closing_dwm ({columns}) VALUES ({placeholders})"
+
             cur.execute(query, values)
             conn.commit()
             message = "✅ Closing data submitted successfully!"
+            return render_template("closing.html", message=message, alert_type="success")
+
         except Exception as e:
             conn.rollback()
             message = f"❌ Error: {str(e)}"
-
-        return render_template("closing.html", message=message)
+            return render_template("closing.html", message=message, alert_type="danger")
 
     return render_template("closing.html")
 
