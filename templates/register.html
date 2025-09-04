@@ -16,10 +16,18 @@
 
     <!-- Location -->
     <div class="mb-3">
-      <label class="form-label">Location</label>
+      <label class="form-label" for="location">Location</label>
       <div class="input-group">
         <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
-        <input type="text" class="form-control" name="location" placeholder="Enter location" required>
+        <select class="form-select" id="location" name="location" required>
+          <option value="" disabled selected>Select Location</option>
+          <option value="Gurgaon">Gurgaon</option>
+          <option value="Hyderabad">Hyderabad</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Surat">Surat</option>
+          <option value="Alwar">Alwar</option>
+          <option value="Lucknow">Lucknow</option>
+        </select>
       </div>
     </div>
 
@@ -64,4 +72,27 @@
     <button type="submit" class="btn btn-primary w-100">Register</button>
     <p class="text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
   </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const roleSelect = document.getElementById("role");
+    const locationSelect = document.getElementById("location");
+
+    function toggleLocation() {
+      if (roleSelect.value === "Admin") {
+        locationSelect.disabled = true;
+        locationSelect.value = ""; // Clear selection
+      } else {
+        locationSelect.disabled = false;
+      }
+    }
+
+    // Initial check
+    toggleLocation();
+
+    // On change
+    roleSelect.addEventListener("change", toggleLocation);
+  });
+</script>
+
 {% endblock %}
