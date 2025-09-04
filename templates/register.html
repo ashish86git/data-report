@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+  <h3 class="text-center mb-4">Create Account</h3>
+  <form method="POST">
+    <!-- Email -->
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+        <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="mb-3">
+      <label class="form-label">Location</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+        <input type="text" class="form-control" name="location" placeholder="Enter location" required>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="mb-3">
+      <label class="form-label">Role</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-user-shield"></i></span>
+        <select class="form-select" name="role" required>
+          <option value="">Select role</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="Supervisor">Supervisor</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+        <span class="input-group-text" onclick="togglePassword('password', this)">
+          <i class="fa-solid fa-eye"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="mb-3">
+      <label class="form-label">Confirm Password</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+        <span class="input-group-text" onclick="togglePassword('confirm_password', this)">
+          <i class="fa-solid fa-eye"></i>
+        </span>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Register</button>
+    <p class="text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+  </form>
+{% endblock %}

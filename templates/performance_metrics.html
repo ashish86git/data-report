@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Performance Metrics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f5f5f5; }
+    header { background: #FF0000; color: white; padding: 15px 30px; font-size: 22px; font-weight: bold; }
+    .container { padding: 20px; }
+    h2, h3 { color: #FF0000; margin-top: 30px; text-align: center; }
+
+    /* 🔹 Filters */
+    .filters { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 20px 0; }
+    .filters select, .filters button {
+      padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+    }
+    .filters button { background: #FF0000; color: white; cursor: pointer; border: none; }
+    .filters button:hover { background: #cc0000; }
+
+    /* 🔹 Smart Tables */
+    .card { margin-top: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: none; }
+    .smart-table { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .smart-table table { margin: 0; border-collapse: separate; border-spacing: 0; width: 100%; }
+    .smart-table thead th {
+      position: sticky; top: 0;
+      background: linear-gradient(90deg, #FF0000, #cc0000);
+      color: white; font-weight: bold; text-transform: uppercase;
+      font-size: 0.85rem; letter-spacing: 0.5px; padding: 12px;
+    }
+    .smart-table tbody tr:nth-child(even) { background: #fff5f5; }
+    .smart-table tbody tr:hover { background: #ffe5e5; transition: background 0.3s ease; }
+    .smart-table td { padding: 10px; font-size: 0.9rem; vertical-align: middle; border-bottom: 1px solid #f0f0f0; }
+    .smart-table td:first-child { font-weight: 600; color: #333; }
+
+    /* 🔹 Chart Grid */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .chart-container {
+      background: white; padding: 20px; border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<header>📊 Performance Metrics Dashboard</header>
+
+<div class="container">
+
+  <!-- 🔹 Filters -->
+  <form method="POST" class="filters">
+    <select name="Date">
+      <option value="">Select Date</option>
+      {% for d in unique_dates %}
+        <option value="{{ d }}" {% if selected_date == d %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="SmartDate">
+      <option value="">Quick Date Filter</option>
+      <option value="today" {% if smart_date == 'today' %}selected{% endif %}>Today</option>
+      <option value="yesterday" {% if smart_date == 'yesterday' %}selected{% endif %}>Yesterday</option>
+      <option value="week" {% if smart_date == 'week' %}selected{% endif %}>This Week</option>
+      <option value="month" {% if smart_date == 'month' %}selected{% endif %}>This Month</option>
+    </select>
+
+    <select name="Shift">
+      <option value="">Select Shift</option>
+      {% for s in unique_shifts %}
+        <option value="{{ s }}" {% if selected_shift == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="Location">
+      <option value="">Select Location</option>
+      {% for l in unique_locations %}
+        <option value="{{ l }}" {% if selected_location == l %}selected{% endif %}>{{ l }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="Customer">
+      <option value="">Select Customer</option>
+      {% for c in unique_customers %}
+        <option value="{{ c }}" {% if selected_customer == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+
+    <!-- Department Filter (frontend JS filter) -->
+    <select id="departmentFilter" name="Department">
+      <option value="">Select Department</option>
+      {% for d in unique_departments %}
+        <option value="{{ d }}" {% if selected_department == d %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Apply</button>
+    <button type="submit" name="clear_filters">Clear</button>
+  </form>
+
+  <!-- 🔹 Activity-wise Summary -->
+  <div class="card p-3">
+    <h3>📌 Activity-wise Summary</h3>
+    <div class="smart-table table-responsive">
+      <table id="activityTable">
+        <thead>
+          <tr>
+            <th>Department</th><th>Activity</th><th>Benchmark</th><th>Head Count</th>
+            <th>Planned Load</th><th>Actual Manpower</th><th>Target</th><th>Required Manpower</th>
+            <th>Execution</th><th>Capacity</th><th>Capacity Utilization %</th><th>Manpower Utilization %</th>
+            <th>Created By</th> <!-- 🔹 Added Column -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+          <tr>
+            <td>{{ row.Department }}</td>
+            <td>{{ row.Activity }}</td>
+            <td>{{ row.Benchmark }}</td>
+            <td>{{ row["Head Count"] }}</td>
+            <td>{{ row["Planned Load"] }}</td>
+            <td>{{ row["Actual Manpower"] }}</td>
+            <td>{{ row.Target }}</td>
+            <td>{{ row["Required Manpower"] }}</td>
+            <td>{{ row.Execution }}</td>
+            <td>{{ row.Capacity }}</td>
+            <td>{{ row["Capacity Utilization %"] }}</td>
+            <td>{{ row["Manpower Utilization %"] }}</td>
+            <td>{{ row["Created_By"] }}</td> <!-- 🔹 Added Cell -->
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 🔹 Daily Totals -->
+  <div class="card p-3">
+    <h3>📅 Daily Totals</h3>
+    <div class="smart-table table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th><th>Head Count</th><th>Planned Load</th><th>Actual Manpower</th>
+            <th>Target</th><th>Required Manpower</th><th>Execution</th><th>Capacity</th>
+            <th>Capacity Utilization %</th><th>Manpower Utilization %</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in daily_totals %}
+          <tr>
+            <td>{{ row.Day }}</td>
+            <td>{{ row["Head Count"] }}</td>
+            <td>{{ row["Planned Load"] }}</td>
+            <td>{{ row["Actual Manpower"] }}</td>
+            <td>{{ row.Target }}</td>
+            <td>{{ row["Required Manpower"] }}</td>
+            <td>{{ row.Execution }}</td>
+            <td>{{ row.Capacity }}</td>
+            <td>{{ row["Capacity Utilization %"] }}</td>
+            <td>{{ row["Manpower Utilization %"] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 🔹 Monthly Totals -->
+  <div class="card p-3">
+    <h3>🗓️ Monthly Totals</h3>
+    <div class="smart-table table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th><th>Head Count</th><th>Planned Load</th><th>Actual Manpower</th>
+            <th>Target</th><th>Required Manpower</th><th>Execution</th><th>Capacity</th>
+            <th>Capacity Utilization %</th><th>Manpower Utilization %</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in monthly_totals %}
+          <tr>
+            <td>{{ row.Month }}</td>
+            <td>{{ row["Head Count"] }}</td>
+            <td>{{ row["Planned Load"] }}</td>
+            <td>{{ row["Actual Manpower"] }}</td>
+            <td>{{ row.Target }}</td>
+            <td>{{ row["Required Manpower"] }}</td>
+            <td>{{ row.Execution }}</td>
+            <td>{{ row.Capacity }}</td>
+            <td>{{ row["Capacity Utilization %"] }}</td>
+            <td>{{ row["Manpower Utilization %"] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 🔹 Charts -->
+  <div class="chart-grid">
+    <div class="chart-container"><canvas id="dailyChart"></canvas></div>
+    <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-container"><canvas id="dailyManpowerChart"></canvas></div>
+    <div class="chart-container"><canvas id="monthlyManpowerChart"></canvas></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-container"><canvas id="utilizationChart"></canvas></div>
+  </div>
+
+</div>
+
+<!-- 🔹 Department Filter Logic (Frontend Only) -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const deptSelect = document.getElementById("departmentFilter");
+  const tableRows = document.querySelectorAll("#activityTable tbody tr");
+
+  deptSelect.addEventListener("change", function() {
+    const selectedDept = this.value.trim().toLowerCase();
+
+    tableRows.forEach(row => {
+      const deptCell = row.querySelector("td:first-child").innerText.trim().toLowerCase();
+
+      if (!selectedDept || deptCell === selectedDept) {
+        row.style.display = "";   // Show row
+      } else {
+        row.style.display = "none"; // Hide row
+      }
+    });
+  });
+});
+</script>
+
+<!-- 🔹 Charts -->
+<script>
+  const dailyLabels = {{ daily_totals | map(attribute='Day') | list | tojson }};
+  const dailyExecution = {{ daily_totals | map(attribute='Execution') | list | tojson }};
+  const dailyCapacity = {{ daily_totals | map(attribute='Capacity') | list | tojson }};
+  const dailyManpower = {{ daily_totals | map(attribute='Actual Manpower') | list | tojson }};
+  const dailyRequired = {{ daily_totals | map(attribute='Required Manpower') | list | tojson }};
+  const dailyCU = {{ daily_totals | map(attribute='Capacity Utilization %') | list | tojson }};
+  const dailyMU = {{ daily_totals | map(attribute='Manpower Utilization %') | list | tojson }};
+
+  const monthlyLabels = {{ monthly_totals | map(attribute='Month') | list | tojson }};
+  const monthlyExecution = {{ monthly_totals | map(attribute='Execution') | list | tojson }};
+  const monthlyCapacity = {{ monthly_totals | map(attribute='Capacity') | list | tojson }};
+  const monthlyManpower = {{ monthly_totals | map(attribute='Actual Manpower') | list | tojson }};
+  const monthlyRequired = {{ monthly_totals | map(attribute='Required Manpower') | list | tojson }};
+  const monthlyCU = {{ monthly_totals | map(attribute='Capacity Utilization %') | list | tojson }};
+  const monthlyMU = {{ monthly_totals | map(attribute='Manpower Utilization %') | list | tojson }};
+
+  new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
+    data: { labels: dailyLabels, datasets: [
+      { label: 'Execution', data: dailyExecution, borderColor: '#FF0000', fill: false },
+      { label: 'Capacity', data: dailyCapacity, borderColor: '#00cc7a', fill: false }
+    ] }
+  });
+
+  new Chart(document.getElementById('monthlyChart'), {
+    type: 'line',
+    data: { labels: monthlyLabels, datasets: [
+      { label: 'Execution', data: monthlyExecution, borderColor: '#FF0000', fill: false },
+      { label: 'Capacity', data: monthlyCapacity, borderColor: '#00cc7a', fill: false }
+    ] }
+  });
+
+  new Chart(document.getElementById('dailyManpowerChart'), {
+    type: 'line',
+    data: { labels: dailyLabels, datasets: [
+      { label: 'Actual Manpower', data: dailyManpower, borderColor: '#FF0000', fill: false },
+      { label: 'Required Manpower', data: dailyRequired, borderColor: '#0000FF', fill: false }
+    ] }
+  });
+
+  new Chart(document.getElementById('monthlyManpowerChart'), {
+    type: 'line',
+    data: { labels: monthlyLabels, datasets: [
+      { label: 'Actual Manpower', data: monthlyManpower, borderColor: '#FF0000', fill: false },
+      { label: 'Required Manpower', data: monthlyRequired, borderColor: '#0000FF', fill: false }
+    ] }
+  });
+
+  new Chart(document.getElementById('utilizationChart'), {
+    type: 'line',
+    data: { labels: dailyLabels, datasets: [
+      { label: 'Capacity Utilization %', data: dailyCU, borderColor: '#FF0000', fill: false },
+      { label: 'Manpower Utilization %', data: dailyMU, borderColor: '#0000FF', fill: false }
+    ] }
+  });
+</script>
+
+</body>
+</html>
