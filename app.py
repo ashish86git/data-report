@@ -754,6 +754,10 @@ def load_master_from_db():
 @app.route('/performance-metrics', methods=['GET', 'POST'])
 @login_required
 def performance_metrics():
+    import numpy as np
+    import pandas as pd
+    import os
+
     df = load_and_merge_entries_from_db()
 
     master_path = os.path.join(BASE_DIR, "master_data.csv")
@@ -870,20 +874,17 @@ def performance_metrics():
 
     # ---- Dict for Template ----
     final_table_data = table_data_df.to_dict(orient='records')
-    session['table_data_list'] = final_table_data
 
-    # ---- Overall Totals (Daily + Monthly) ----
+    # ---- Daily + Monthly totals ----
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
-    # ---- Daily totals ----
     daily_totals = []
     for day, group in df.groupby(df['Date'].dt.strftime("%Y-%m-%d")):
         daily_table = benchmarks_df.copy()
         daily_cols = group.columns.tolist()
 
         daily_table['Actual Manpower'] = daily_table['Activity'].apply(
-            lambda activity: group[
-                f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in daily_cols else 0
+            lambda activity: group[f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in daily_cols else 0
         )
         daily_table['Target'] = daily_table['Activity'].apply(
             lambda activity: group[f"{activity}_opening"].sum() if f"{activity}_opening" in daily_cols else 0
@@ -912,15 +913,13 @@ def performance_metrics():
             ),
         })
 
-    # ---- Monthly totals ----
     monthly_totals = []
     for month, group in df.groupby(df['Date'].dt.to_period("M").astype(str)):
         monthly_table = benchmarks_df.copy()
         monthly_cols = group.columns.tolist()
 
         monthly_table['Actual Manpower'] = monthly_table['Activity'].apply(
-            lambda activity: group[
-                f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in monthly_cols else 0
+            lambda activity: group[f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in monthly_cols else 0
         )
         monthly_table['Target'] = monthly_table['Activity'].apply(
             lambda activity: group[f"{activity}_opening"].sum() if f"{activity}_opening" in monthly_cols else 0
@@ -949,6 +948,24 @@ def performance_metrics():
             ),
         })
 
+    # ---- Convert numpy types to Python native ----
+    def convert_numpy_to_python(obj):
+        if isinstance(obj, dict):
+            return {k: convert_numpy_to_python(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [convert_numpy_to_python(i) for i in obj]
+        elif isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        else:
+            return obj
+
+    final_table_data = convert_numpy_to_python(final_table_data)
+    daily_totals = convert_numpy_to_python(daily_totals)
+    monthly_totals = convert_numpy_to_python(monthly_totals)
+
+    # ---- Render Template ----
     return render_template("performance_metrics.html",
                            table_data=final_table_data,
                            unique_dates=df["Date"].dt.strftime('%Y-%m-%d').dropna().unique().tolist(),
