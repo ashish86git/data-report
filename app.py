@@ -878,11 +878,11 @@ def performance_metrics():
     # ---- Daily + Monthly totals ----
     df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
+    # Daily totals
     daily_totals = []
     for day, group in df.groupby(df['Date'].dt.strftime("%Y-%m-%d")):
         daily_table = benchmarks_df.copy()
         daily_cols = group.columns.tolist()
-
         daily_table['Actual Manpower'] = daily_table['Activity'].apply(
             lambda activity: group[f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in daily_cols else 0
         )
@@ -898,8 +898,8 @@ def performance_metrics():
 
         daily_totals.append({
             "Day": day,
-            "Head Count": group["Head Count"].sum() if "Head Count" in group.columns else 0,
-            "Planned Load": group["Planned Load"].sum() if "Planned Load" in group.columns else 0,
+            "Head Count": group.get("Head Count", pd.Series([0])).sum(),
+            "Planned Load": group.get("Planned Load", pd.Series([0])).sum(),
             "Actual Manpower": daily_table['Actual Manpower'].sum(),
             "Target": daily_table['Target'].sum(),
             "Required Manpower": daily_table['Required Manpower'].sum(),
@@ -907,17 +907,15 @@ def performance_metrics():
             "Capacity": daily_table['Capacity'].sum(),
             "Capacity Utilization %": f"{(daily_table['Execution'].sum() / daily_table['Capacity'].sum() * 100):.2f}%"
             if daily_table['Capacity'].sum() > 0 else "0.00%",
-            "Manpower Utilization %": (
-                f"{(daily_table['Execution'].sum() / (daily_table['Required Manpower'].sum() * daily_table['Benchmark'].mean()) * 100):.2f}%"
-                if daily_table['Required Manpower'].sum() > 0 and daily_table['Benchmark'].mean() > 0 else "0.00%"
-            ),
+            "Manpower Utilization %": f"{(daily_table['Execution'].sum() / (daily_table['Required Manpower'].sum() * daily_table['Benchmark'].mean()) * 100):.2f}%"
+            if daily_table['Required Manpower'].sum() > 0 and daily_table['Benchmark'].mean() > 0 else "0.00%"
         })
 
+    # Monthly totals (same logic)
     monthly_totals = []
     for month, group in df.groupby(df['Date'].dt.to_period("M").astype(str)):
         monthly_table = benchmarks_df.copy()
         monthly_cols = group.columns.tolist()
-
         monthly_table['Actual Manpower'] = monthly_table['Activity'].apply(
             lambda activity: group[f"{activity}_Manpower_opening"].sum() if f"{activity}_Manpower_opening" in monthly_cols else 0
         )
@@ -933,8 +931,8 @@ def performance_metrics():
 
         monthly_totals.append({
             "Month": month,
-            "Head Count": group["Head Count"].sum() if "Head Count" in group.columns else 0,
-            "Planned Load": group["Planned Load"].sum() if "Planned Load" in group.columns else 0,
+            "Head Count": group.get("Head Count", pd.Series([0])).sum(),
+            "Planned Load": group.get("Planned Load", pd.Series([0])).sum(),
             "Actual Manpower": monthly_table['Actual Manpower'].sum(),
             "Target": monthly_table['Target'].sum(),
             "Required Manpower": monthly_table['Required Manpower'].sum(),
@@ -942,13 +940,11 @@ def performance_metrics():
             "Capacity": monthly_table['Capacity'].sum(),
             "Capacity Utilization %": f"{(monthly_table['Execution'].sum() / monthly_table['Capacity'].sum() * 100):.2f}%"
             if monthly_table['Capacity'].sum() > 0 else "0.00%",
-            "Manpower Utilization %": (
-                f"{(monthly_table['Execution'].sum() / (monthly_table['Required Manpower'].sum() * monthly_table['Benchmark'].mean()) * 100):.2f}%"
-                if monthly_table['Required Manpower'].sum() > 0 and monthly_table['Benchmark'].mean() > 0 else "0.00%"
-            ),
+            "Manpower Utilization %": f"{(monthly_table['Execution'].sum() / (monthly_table['Required Manpower'].sum() * monthly_table['Benchmark'].mean()) * 100):.2f}%"
+            if monthly_table['Required Manpower'].sum() > 0 and monthly_table['Benchmark'].mean() > 0 else "0.00%"
         })
 
-    # ---- Convert numpy types to Python native ----
+    # ---- Convert final data to Python native types (for Heroku JSON safety) ----
     def convert_numpy_to_python(obj):
         if isinstance(obj, dict):
             return {k: convert_numpy_to_python(v) for k, v in obj.items()}
@@ -965,7 +961,6 @@ def performance_metrics():
     daily_totals = convert_numpy_to_python(daily_totals)
     monthly_totals = convert_numpy_to_python(monthly_totals)
 
-    # ---- Render Template ----
     return render_template("performance_metrics.html",
                            table_data=final_table_data,
                            unique_dates=df["Date"].dt.strftime('%Y-%m-%d').dropna().unique().tolist(),
