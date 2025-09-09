@@ -252,22 +252,24 @@ def opening():
         cleaned_data['source'] = 'Opening'
         cleaned_data['timestamp'] = timestamp_now.strftime("%Y-%m-%d %H:%M:%S")
 
-        employee_id = cleaned_data.get('employee_id')
+        # yahan par employee_id ki jagah location aur customer ka validation karenge
+        location = cleaned_data.get('location')
+        customer = cleaned_data.get('customer')
         today_date = timestamp_now.date()
 
         try:
             check_query = """
                 SELECT timestamp FROM opening_dwm 
-                WHERE employee_id = %s AND DATE(timestamp) = %s
+                WHERE location = %s AND customer = %s AND DATE(timestamp) = %s
                 ORDER BY timestamp DESC LIMIT 1
             """
-            cur.execute(check_query, (employee_id, today_date))
+            cur.execute(check_query, (location, customer, today_date))
             previous_submission = cur.fetchone()
 
             if previous_submission:
                 last_submission_time = datetime.strptime(previous_submission[0], "%Y-%m-%d %H:%M:%S")
                 if (timestamp_now - last_submission_time) < timedelta(hours=8):
-                    message = "⚠️ You have already submitted the form today. You can submit again after 8 hours."
+                    message = "⚠️ You have already submitted the form for this Location & Customer today. You can submit again after 8 hours."
                     return render_template("opening.html", message=message, alert_type="warning")
 
             columns = ', '.join(cleaned_data.keys())
@@ -286,6 +288,7 @@ def opening():
             return render_template("opening.html", message=message, alert_type="danger")
 
     return render_template("opening.html")
+
 
 
 # ------------------ Closing Form ------------------
@@ -341,22 +344,24 @@ def closing():
         cleaned_data['source'] = 'Closing'
         cleaned_data['timestamp'] = timestamp_now.strftime("%Y-%m-%d %H:%M:%S")
 
-        employee_id = cleaned_data.get('employee_id')
+        # employee_id ki jagah location + customer validation
+        location = cleaned_data.get('location')
+        customer = cleaned_data.get('customer')
         today_date = timestamp_now.date()
 
         try:
             check_query = """
                 SELECT timestamp FROM closing_dwm
-                WHERE employee_id = %s AND DATE(timestamp) = %s
+                WHERE location = %s AND customer = %s AND DATE(timestamp) = %s
                 ORDER BY timestamp DESC LIMIT 1
             """
-            cur.execute(check_query, (employee_id, today_date))
+            cur.execute(check_query, (location, customer, today_date))
             previous_submission = cur.fetchone()
 
             if previous_submission:
                 last_time = datetime.strptime(previous_submission[0], "%Y-%m-%d %H:%M:%S")
                 if (timestamp_now - last_time) < timedelta(hours=8):
-                    message = "⚠️ You have already submitted the form today. You can submit again after 8 hours."
+                    message = "⚠️ You have already submitted the form for this Location & Customer today. You can submit again after 8 hours."
                     return render_template("closing.html", message=message, alert_type="warning")
 
             columns = ', '.join(cleaned_data.keys())
@@ -375,6 +380,7 @@ def closing():
             return render_template("closing.html", message=message, alert_type="danger")
 
     return render_template("closing.html")
+
 
 
 
